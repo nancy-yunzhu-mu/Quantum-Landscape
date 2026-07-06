@@ -1,21 +1,31 @@
 # Packages analyzed by fetch_data.py — one npm package name per line.
 # Blank lines and lines starting with '#' are ignored.
-# Any package with fewer than 3 sized runtime dependencies is skipped automatically.
+# Any package with fewer than 3 sized runtime dependencies is skipped
+# automatically (you can't talk about concentration across two holdings),
+# so a handful of zero-dependency libraries below will not appear in the table.
 #
-# Build tools & bundlers
+# ── Build tools & bundlers ─────────────────────────────────────────────
 webpack
 rollup
 vite
 parcel
 esbuild
 gulp
+grunt
 browserify
 webpack-cli
 webpack-dev-server
 babel-loader
 ts-node
 tsup
-# Frameworks & meta-frameworks
+snowpack
+@vercel/ncc
+terser
+postcss
+autoprefixer
+sass
+tailwindcss
+# ── Frameworks & meta-frameworks ───────────────────────────────────────
 next
 gatsby
 nuxt
@@ -26,21 +36,41 @@ koa
 fastify
 hapi
 @hapi/hapi
-# Compilers & linters
+restify
+sails
+@remix-run/server-runtime
+@sveltejs/kit
+astro
+preact
+ember-cli
+@angular/cli
+marko
+# ── Compilers, linters & formatters ────────────────────────────────────
 @babel/core
 @babel/preset-env
+@babel/cli
 eslint
-prettier
 stylelint
-# Testing
+standard
+xo
+# ── Testing ────────────────────────────────────────────────────────────
 jest
 mocha
+jasmine
 cypress
 playwright
 puppeteer
 @storybook/react
 karma
-# CLIs & utilities
+ava
+vitest
+testcafe
+@wdio/cli
+sinon
+supertest
+nock
+msw
+# ── CLIs & process tools ───────────────────────────────────────────────
 commander
 yargs
 inquirer
@@ -49,25 +79,122 @@ meow
 boxen
 nodemon
 pm2
+forever
+concurrently
+npm-run-all
+rimraf
+fs-extra
+globby
+chokidar
+execa
+shelljs
+zx
+prompts
+enquirer
+listr2
+cli-progress
+ink
+# ── Release & repo tooling ─────────────────────────────────────────────
 lerna
 semantic-release
+release-it
+@changesets/cli
+standard-version
+commitizen
+lint-staged
+size-limit
 npm-check-updates
-# HTTP & networking
+depcheck
+madge
+plop
+yeoman-generator
+# ── HTTP & networking ──────────────────────────────────────────────────
 axios
 got
 superagent
 node-fetch
-# Databases & ORMs
+needle
+ky
+form-data
+# ── Databases & ORMs ───────────────────────────────────────────────────
 mongoose
 sequelize
 typeorm
 knex
 prisma
+@prisma/client
+objection
+@mikro-orm/core
 bullmq
+bull
+agenda
 ioredis
-# Logging & misc
+mysql2
+sqlite3
+lowdb
+# ── Cloud & external services ──────────────────────────────────────────
+@aws-sdk/client-s3
+aws-sdk
+firebase-admin
+@google-cloud/storage
+stripe
+twilio
+@sendgrid/mail
+nodemailer
+googleapis
+@octokit/rest
+simple-git
+dockerode
+# ── Validation & config ────────────────────────────────────────────────
+yup
+joi
+ajv
+class-validator
+class-transformer
+config
+convict
+cosmiconfig
+# ── Logging ────────────────────────────────────────────────────────────
 winston
 pino
 morgan
+bunyan
+log4js
+signale
+# ── GraphQL & realtime ─────────────────────────────────────────────────
+@apollo/server
+apollo-server
+graphql-yoga
+mercurius
+type-graphql
+express-graphql
+socket.io
+socket.io-client
+engine.io
+# ── Auth & middleware ──────────────────────────────────────────────────
+passport
+jsonwebtoken
+body-parser
+multer
+connect
+compression
+express-session
+cookie-parser
+# ── Media & documents ──────────────────────────────────────────────────
 sharp
+jimp
 jsdom
+cheerio
+pdfkit
+archiver
+jszip
+node-gyp
+# ── Frontend libraries ─────────────────────────────────────────────────
+@reduxjs/toolkit
+react-redux
+react-router-dom
+@tanstack/react-query
+formik
+styled-components
+@emotion/react
+@mui/material
