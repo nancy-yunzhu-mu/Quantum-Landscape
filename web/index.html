@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>npm Supply-Chain Concentration</title>
+  <link rel="preconnect" href="https://registry.npmjs.org" />
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <header class="topbar">
+    <div class="wrap topbar-inner">
+      <a class="back" href="#">&larr; Back to home</a>
+      <button id="refreshBtn" class="btn-ghost" type="button">Refresh</button>
+    </div>
+    <div class="wrap">
+      <h1 class="title">npm Supply-Chain Concentration</h1>
+      <p class="subtitle">Source: npm registry (registry.npmjs.org)</p>
+    </div>
+  </header>
+
+  <main class="wrap">
+    <div class="tags">
+      <span class="tag">2026</span>
+      <span class="tag tag-live"><span class="dot"></span> Live</span>
+      <span class="tag">Open Source</span>
+      <span class="tag">Supply-Chain Risk</span>
+    </div>
+
+    <blockquote class="hero">
+      Turn a package's dependency tree into its real install footprint &mdash; ranked and comparable.
+    </blockquote>
+
+    <div class="lede">
+      <p>
+        A live dashboard that pulls the latest release of each package from the public npm
+        registry and converts its raw dependency list into a fast, searchable, and comparable
+        view of each package's <em>diversification</em> and heaviest exposures.
+      </p>
+      <p>
+        Sort packages by various parameters, including concentration metrics (Largest dependency %,
+        Top&nbsp;3 dependencies %, and HHI), plus risk tags for flagging concentration risk &mdash;
+        useful for quickly spotting hidden single-dependency exposure, bloated installs, supply-chain
+        review, and footprint profiling.
+      </p>
+    </div>
+
+    <p class="prompt">Want another package tracked? Add it to <code>packages.txt</code> and hit Refresh.</p>
+
+    <details class="notes">
+      <summary>Notes</summary>
+      <div class="notes-body">
+        <p>
+          Each package's direct <strong>runtime dependencies</strong> are treated as a portfolio.
+          Every dependency is weighted by its own <strong>unpacked install size</strong> (bytes of
+          its latest release). The concentration statistics are the same ones an analyst runs on a
+          fund's holdings:
+        </p>
+        <ul>
+          <li><strong>Largest %</strong> &mdash; the single heaviest dependency's share of the footprint.</li>
+          <li><strong>Top&nbsp;3 %</strong> &mdash; combined share of the three heaviest dependencies.</li>
+          <li><strong>HHI</strong> &mdash; Herfindahl-Hirschman Index, the sum of squared shares (0&ndash;1).</li>
+        </ul>
+        <p>
+          The risk tag buckets the HHI using the U.S. DOJ / FTC merger-guideline thresholds
+          (0.15 and 0.25 on the 0&ndash;1 scale): <span class="rag rag-low">Low</span> below 0.15,
+          <span class="rag rag-med">Medium</span> below 0.25, <span class="rag rag-high">High</span>
+          at or above 0.25.
+        </p>
+      </div>
+    </details>
+
+    <section class="stats" id="stats">
+      <div class="stat-card">
+        <div class="stat-label"><span class="stat-ic">&#9636;</span> PACKAGES TRACKED</div>
+        <div class="stat-value" id="statPackages">&mdash;</div>
+        <div class="stat-sub">latest release per package</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-label">HEAVIEST-CONCENTRATION FLAGS</div>
+        <div class="stat-value" id="statHigh">&mdash;</div>
+        <div class="stat-sub">packages tagged High risk</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-label">MEDIAN HHI</div>
+        <div class="stat-value" id="statHhi">&mdash;</div>
+        <div class="stat-sub">concentration index</div>
+      </div>
+    </section>
+
+    <p class="updated">Last updated (UTC): <strong id="updated">&mdash;</strong></p>
+
+    <div class="search">
+      <span class="search-ic">&#9906;</span>
+      <input id="searchInput" type="text" placeholder="Search by package name or heaviest dependency..." />
+    </div>
+
+    <div class="table-wrap">
+      <table id="table">
+        <thead>
+          <tr>
+            <th data-key="package" class="sortable col-name">Package <span class="arrow"></span></th>
+            <th data-key="version" class="sortable">Latest <span class="arrow"></span></th>
+            <th data-key="deps" class="sortable num">Deps <span class="arrow"></span></th>
+            <th data-key="largest_pct" class="sortable num">Largest % <span class="arrow"></span></th>
+            <th data-key="top3_pct" class="sortable num">Top 3 % <span class="arrow"></span></th>
+            <th data-key="hhi" class="sortable num">HHI <span class="arrow"></span></th>
+            <th data-key="risk" class="sortable">Risk <span class="arrow"></span></th>
+            <th class="col-holding">HEAVIEST DEP</th>
+            <th data-key="install_bytes" class="sortable num">Install Size <span class="arrow"></span></th>
+            <th>LINKS</th>
+          </tr>
+        </thead>
+        <tbody id="tbody"></tbody>
+      </table>
+    </div>
+
+    <p class="count" id="count">&nbsp;</p>
+  </main>
+
+  <footer class="footer">
+    <div class="wrap">&copy; 2026 npm Concentration Explorer &middot; data from the public npm registry</div>
+  </footer>
+
+  <script src="app.js"></script>
+</body>
+</html>
