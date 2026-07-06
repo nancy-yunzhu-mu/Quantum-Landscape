@@ -56,6 +56,23 @@ python3 server.py
 `data.json` is committed so the dashboard renders immediately; re-run `fetch_data.py`
 (or click **Refresh**) to pull the latest numbers.
 
+## View it in the browser (no terminal)
+
+Two ways to see the dashboard without running anything locally:
+
+**GitHub Pages — a hosted URL.** A workflow (`.github/workflows/pages.yml`) publishes
+the dashboard as a static site. To turn it on once: repo **Settings → Pages → Build and
+deployment → Source: GitHub Actions**. After the next push it goes live at
+`https://<owner>.github.io/<repo>/`. Pages usually deploys from the default branch, so you
+may need to merge this branch to `main` first. On Pages the table, search and sorting all
+work; the **Refresh** button just reloads the committed snapshot (there's no Python server
+to re-fetch), and the daily refresh workflow keeps that snapshot current.
+
+**GitHub Codespaces — run it in the browser, works on this branch now.** On the repo page:
+**Code ▸ Codespaces ▸ Create codespace on this branch**, then in the Codespace terminal run
+`python3 server.py` and click the forwarded port. This runs the real server, so the
+**Refresh** button re-fetches live.
+
 ## Configure which packages are tracked
 
 Edit [`packages.txt`](packages.txt) — one npm package name per line. Any package with

@@ -101,9 +101,23 @@ function applyData(data) {
 }
 
 async function loadData() {
-  const res = await fetch("../data.json?_=" + Date.now());
-  if (!res.ok) throw new Error("data.json not found — run fetch_data.py first");
-  applyData(await res.json());
+  // "data.json" works when the page is hosted next to it (GitHub Pages);
+  // "../data.json" works under the local dev server, where the page lives in /web.
+  const candidates = ["data.json", "../data.json"];
+  let lastErr;
+  for (const path of candidates) {
+    try {
+      const res = await fetch(path + "?_=" + Date.now());
+      if (res.ok) {
+        applyData(await res.json());
+        return;
+      }
+      lastErr = new Error("HTTP " + res.status);
+    } catch (err) {
+      lastErr = err;
+    }
+  }
+  throw new Error("data.json not found — run fetch_data.py first (" + lastErr + ")");
 }
 
 function wireUp() {
