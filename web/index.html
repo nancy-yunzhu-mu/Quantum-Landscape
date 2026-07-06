@@ -20,11 +20,12 @@
   </header>
 
   <main class="wrap">
-    <div class="tags">
-      <span class="tag">2026</span>
-      <span class="tag tag-live"><span class="dot"></span> Live</span>
-      <span class="tag">Open Source</span>
-      <span class="tag">Supply-Chain Risk</span>
+    <div class="tags" id="filters">
+      <span class="tag tag-static">2026</span>
+      <button type="button" class="tag tag-live is-active" data-risk="all"><span class="dot"></span> Live</button>
+      <button type="button" class="tag tag-filter" data-risk="Low"><span class="fdot low"></span> Low <span class="tag-count" data-count="Low"></span></button>
+      <button type="button" class="tag tag-filter" data-risk="Medium"><span class="fdot med"></span> Medium <span class="tag-count" data-count="Medium"></span></button>
+      <button type="button" class="tag tag-filter" data-risk="High"><span class="fdot high"></span> High <span class="tag-count" data-count="High"></span></button>
     </div>
 
     <blockquote class="hero">

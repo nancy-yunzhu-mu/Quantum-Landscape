@@ -93,20 +93,50 @@ body {
   padding: 5px 13px;
   border-radius: 999px;
   font-size: 13px;
+  font-family: inherit;
+  line-height: 1.4;
 }
+button.tag {
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  transition: background 0.15s, border-color 0.15s, color 0.15s;
+}
+button.tag:hover { color: var(--text); border-color: #3a3a3f; }
+button.tag:focus-visible { outline: 2px solid #3f3f46; outline-offset: 2px; }
+
 .tag-live {
   color: var(--green);
   border-color: rgba(74, 222, 128, 0.35);
   background: var(--green-bg);
-  display: inline-flex;
-  align-items: center;
-  gap: 7px;
 }
 .tag-live .dot {
   width: 7px; height: 7px; border-radius: 50%;
   background: var(--green);
   box-shadow: 0 0 0 3px rgba(74, 222, 128, 0.2);
 }
+
+/* filter chips — colored dot matches the RAG badge for that risk level */
+.fdot { width: 7px; height: 7px; border-radius: 50%; display: inline-block; }
+.fdot.low { background: var(--green); }
+.fdot.med { background: var(--amber); }
+.fdot.high { background: var(--red); }
+.tag-count { color: var(--muted-2); font-variant-numeric: tabular-nums; }
+
+.tag-filter.is-active {
+  color: var(--text);
+  border-color: #52525b;
+  background: #232327;
+}
+.tag-filter.is-active .tag-count { color: var(--muted); }
+.tag-live.is-active { box-shadow: 0 0 0 1px rgba(74, 222, 128, 0.25) inset; }
+.tag-live:not(.is-active) {
+  color: var(--muted);
+  background: var(--panel-2);
+  border-color: var(--border);
+}
+.tag-live:not(.is-active) .dot { background: var(--muted-2); box-shadow: none; }
 
 /* ---- hero ---- */
 .hero {

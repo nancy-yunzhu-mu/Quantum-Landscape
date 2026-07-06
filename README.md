@@ -40,6 +40,10 @@ The **risk tag** buckets the HHI with the U.S. DOJ / FTC merger-guideline thresh
 A high score is the software analogue of single-name concentration risk: most of what you
 install — and most of your supply-chain surface — rides on one package.
 
+The **filter chips** under the title (Live / Low / Medium / High) filter the table by risk
+level — each shows its live count, "Live" resets to all — and they combine with the search
+box and column sorting.
+
 ## Run it
 
 No dependencies beyond Python 3.8+ (standard library only).

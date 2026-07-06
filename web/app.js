@@ -6,6 +6,7 @@ const RISK_CLASS = { Low: "rag-low", Medium: "rag-med", High: "rag-high" };
 let ALL = [];
 let sortKey = "deps";
 let sortDir = "desc"; // 'asc' | 'desc'
+let riskFilter = "all"; // 'all' | 'Low' | 'Medium' | 'High'
 
 function fmtBytes(n) {
   if (!n && n !== 0) return "—";
@@ -47,6 +48,9 @@ function sortRecords(rows) {
 function render() {
   const q = document.getElementById("searchInput").value.trim().toLowerCase();
   let rows = ALL;
+  if (riskFilter !== "all") {
+    rows = rows.filter((r) => r.risk === riskFilter);
+  }
   if (q) {
     rows = rows.filter(
       (r) =>
@@ -58,7 +62,10 @@ function render() {
 
   const tbody = document.getElementById("tbody");
   if (!rows.length) {
-    tbody.innerHTML = `<tr><td colspan="10" class="empty">No packages match "${esc(q)}".</td></tr>`;
+    const note = q
+      ? `No ${riskFilter === "all" ? "" : riskFilter + "-risk "}packages match "${esc(q)}".`
+      : `No ${riskFilter}-risk packages.`;
+    tbody.innerHTML = `<tr><td colspan="10" class="empty">${note}</td></tr>`;
   } else {
     tbody.innerHTML = rows
       .map(
@@ -79,8 +86,9 @@ function render() {
       .join("");
   }
 
+  const suffix = riskFilter === "all" ? "" : ` · ${riskFilter} risk`;
   document.getElementById("count").textContent =
-    `Showing ${rows.length} of ${ALL.length} packages`;
+    `Showing ${rows.length} of ${ALL.length} packages${suffix}`;
 
   document.querySelectorAll("th.sortable").forEach((th) => {
     th.classList.remove("sort-asc", "sort-desc");
@@ -97,6 +105,22 @@ function applyData(data) {
   document.getElementById("statHigh").textContent = data.summary.high_risk_count;
   document.getElementById("statHhi").textContent = data.summary.median_hhi.toFixed(3);
   document.getElementById("updated").textContent = fmtUpdated(data.generated_at);
+
+  // per-chip counts
+  const counts = { Low: 0, Medium: 0, High: 0 };
+  ALL.forEach((r) => (counts[r.risk] = (counts[r.risk] || 0) + 1));
+  document.querySelectorAll(".tag-count").forEach((el) => {
+    el.textContent = counts[el.dataset.count] ?? 0;
+  });
+
+  render();
+}
+
+function setRiskFilter(next) {
+  riskFilter = next;
+  document.querySelectorAll("#filters button").forEach((btn) => {
+    btn.classList.toggle("is-active", btn.dataset.risk === riskFilter);
+  });
   render();
 }
 
@@ -122,6 +146,16 @@ async function loadData() {
 
 function wireUp() {
   document.getElementById("searchInput").addEventListener("input", render);
+
+  document.querySelectorAll("#filters button").forEach((btn) => {
+    btn.addEventListener("click", () => {
+      // clicking the active non-"all" chip toggles back to "Live" (all)
+      const next = btn.dataset.risk === riskFilter && riskFilter !== "all"
+        ? "all"
+        : btn.dataset.risk;
+      setRiskFilter(next);
+    });
+  });
 
   document.querySelectorAll("th.sortable").forEach((th) => {
     th.addEventListener("click", () => {
