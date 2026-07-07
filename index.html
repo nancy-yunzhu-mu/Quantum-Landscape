@@ -1,0 +1,2350 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Quantum Technology Companies</title>
+<meta name="description" content="Interactive dashboard of quantum technology companies — hardware and software, pre-seed to public." />
+<style>
+:root {
+  --bg: #0a0a0b;
+  --panel: #131315;
+  --panel-2: #17171a;
+  --border: #262629;
+  --border-soft: #1e1e21;
+  --text: #f4f4f5;
+  --muted: #a1a1aa;
+  --muted-2: #71717a;
+  --accent: #e5e5e7;
+  --green: #4ade80;
+  --green-bg: rgba(74, 222, 128, 0.12);
+  --amber: #fbbf24;
+  --amber-bg: rgba(251, 191, 36, 0.12);
+  --red: #f87171;
+  --red-bg: rgba(248, 113, 113, 0.12);
+  --link: #93b4ff;
+  --violet: #a78bfa;
+  --violet-bg: rgba(167, 139, 250, 0.14);
+  --cyan: #38bdf8;
+  --cyan-bg: rgba(56, 189, 248, 0.12);
+  --radius: 12px;
+}
+
+* { box-sizing: border-box; }
+
+html { -webkit-text-size-adjust: 100%; }
+
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--text);
+  font-family: ui-sans-serif, -apple-system, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  font-size: 15px;
+  line-height: 1.55;
+  -webkit-font-smoothing: antialiased;
+}
+
+.wrap {
+  max-width: 1180px;
+  margin: 0 auto;
+  padding: 0 28px;
+}
+
+/* ---- top bar / header ---- */
+.topbar {
+  border-bottom: 1px solid var(--border-soft);
+  padding: 22px 0 30px;
+}
+.topbar-inner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 26px;
+}
+.back {
+  color: var(--muted);
+  text-decoration: none;
+  font-size: 14px;
+}
+.back:hover { color: var(--text); }
+.btn-ghost {
+  background: transparent;
+  color: var(--text);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 8px 16px;
+  font-size: 14px;
+  cursor: pointer;
+  transition: background 0.15s, border-color 0.15s;
+}
+.btn-ghost:hover { background: var(--panel-2); border-color: #3a3a3f; }
+.btn-ghost:disabled { opacity: 0.55; cursor: progress; }
+.title {
+  margin: 0;
+  font-size: 42px;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+}
+.subtitle {
+  margin: 8px 0 0;
+  color: var(--muted-2);
+  font-size: 14.5px;
+}
+
+/* ---- tags ---- */
+.tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin: 40px 0 34px;
+}
+.tag {
+  background: var(--panel-2);
+  border: 1px solid var(--border);
+  color: var(--muted);
+  padding: 5px 13px;
+  border-radius: 999px;
+  font-size: 13px;
+  font-family: inherit;
+  line-height: 1.4;
+}
+button.tag {
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  transition: background 0.15s, border-color 0.15s, color 0.15s;
+}
+button.tag:hover { color: var(--text); border-color: #3a3a3f; }
+button.tag:focus-visible { outline: 2px solid #3f3f46; outline-offset: 2px; }
+
+.tag-all {
+  color: var(--violet);
+  border-color: rgba(167, 139, 250, 0.4);
+  background: var(--violet-bg);
+}
+.tag-all .dot {
+  width: 7px; height: 7px; border-radius: 50%;
+  background: var(--violet);
+  box-shadow: 0 0 0 3px rgba(167, 139, 250, 0.2);
+}
+
+/* filter chips — colored dot per domain */
+.fdot { width: 7px; height: 7px; border-radius: 50%; display: inline-block; }
+.fdot.d-hw { background: var(--cyan); }
+.fdot.d-sw { background: var(--violet); }
+.fdot.d-en { background: var(--amber); }
+.fdot.d-se { background: var(--green); }
+.tag-count { color: var(--muted-2); font-variant-numeric: tabular-nums; }
+
+.tag-filter.is-active {
+  color: var(--text);
+  border-color: #52525b;
+  background: #232327;
+}
+.tag-filter.is-active .tag-count { color: var(--muted); }
+.tag-all.is-active { box-shadow: 0 0 0 1px rgba(167, 139, 250, 0.25) inset; }
+.tag-all:not(.is-active) {
+  color: var(--muted);
+  background: var(--panel-2);
+  border-color: var(--border);
+}
+.tag-all:not(.is-active) .dot { background: var(--muted-2); box-shadow: none; }
+
+/* ---- hero ---- */
+.hero {
+  margin: 0 0 30px;
+  padding: 4px 0 4px 24px;
+  border-left: 3px solid #3f3f46;
+  font-size: 30px;
+  font-weight: 700;
+  line-height: 1.28;
+  letter-spacing: -0.02em;
+}
+.lede { max-width: 900px; }
+.lede p { color: var(--muted); margin: 0 0 18px; }
+.lede em { color: var(--text); font-style: normal; font-weight: 600; }
+.prompt { color: var(--muted); margin: 26px 0 24px; }
+.prompt code {
+  background: var(--panel-2);
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  padding: 2px 6px;
+  font-size: 13px;
+}
+
+/* ---- notes ---- */
+.notes {
+  background: var(--panel);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  margin: 0 0 44px;
+}
+.notes summary {
+  list-style: none;
+  cursor: pointer;
+  padding: 18px 22px;
+  font-weight: 600;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.notes summary::-webkit-details-marker { display: none; }
+.notes summary::after {
+  content: "\25BE";
+  color: var(--muted);
+  transition: transform 0.2s;
+}
+.notes[open] summary::after { transform: rotate(180deg); }
+.notes-body {
+  padding: 0 22px 22px;
+  color: var(--muted);
+  border-top: 1px solid var(--border-soft);
+  padding-top: 18px;
+}
+.notes-body ul { margin: 12px 0; padding-left: 20px; }
+.notes-body li { margin: 6px 0; }
+.notes-body strong { color: var(--text); }
+
+/* ---- stat cards ---- */
+.stats {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 18px;
+  margin-bottom: 30px;
+}
+.stat-card {
+  background: var(--panel);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 22px 24px;
+}
+.stat-label {
+  color: var(--muted-2);
+  font-size: 12px;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.stat-ic { color: var(--muted-2); }
+.stat-value {
+  font-size: 34px;
+  font-weight: 700;
+  margin: 12px 0 6px;
+  letter-spacing: -0.01em;
+}
+.stat-sub { color: var(--muted-2); font-size: 13px; }
+
+.updated { color: var(--muted-2); font-size: 14px; margin: 0 0 22px; }
+.updated strong { color: var(--muted); font-weight: 600; }
+
+/* ---- search + controls ---- */
+.controls {
+  display: flex;
+  gap: 12px;
+  margin-bottom: 22px;
+  align-items: stretch;
+}
+.controls .search { flex: 1; margin-bottom: 0; }
+.stage-select {
+  background: var(--panel-2);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  color: var(--text);
+  padding: 0 40px 0 16px;
+  font-size: 14px;
+  font-family: inherit;
+  outline: none;
+  cursor: pointer;
+  min-width: 175px;
+  -webkit-appearance: none;
+  appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%2371717a' stroke-width='2'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 14px center;
+}
+.stage-select:focus { border-color: #3f3f46; }
+.stage-select option { background: var(--panel-2); color: var(--text); }
+
+.search {
+  position: relative;
+  margin-bottom: 22px;
+}
+.search-ic {
+  position: absolute;
+  left: 16px; top: 50%;
+  transform: translateY(-50%);
+  color: var(--muted-2);
+}
+.search input {
+  width: 100%;
+  background: var(--panel-2);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  color: var(--text);
+  padding: 14px 16px 14px 42px;
+  font-size: 15px;
+  outline: none;
+}
+.search input::placeholder { color: var(--muted-2); }
+.search input:focus { border-color: #3f3f46; }
+
+/* ---- table ---- */
+.table-wrap {
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  overflow-x: auto;
+}
+table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 14px;
+  min-width: 900px;
+}
+thead th {
+  text-align: left;
+  color: var(--muted-2);
+  font-weight: 500;
+  font-size: 13px;
+  padding: 16px 16px;
+  border-bottom: 1px solid var(--border);
+  white-space: nowrap;
+  user-select: none;
+}
+th.num, td.num { text-align: right; }
+th.sortable { cursor: pointer; }
+th.sortable:hover { color: var(--text); }
+th .arrow { display: inline-block; width: 10px; color: var(--muted); }
+th.sort-asc .arrow::after { content: "\25B4"; }
+th.sort-desc .arrow::after { content: "\25BE"; }
+th.sortable:not(.sort-asc):not(.sort-desc) .arrow::after { content: "\21C5"; opacity: 0.4; }
+
+tbody td {
+  padding: 18px 16px;
+  border-bottom: 1px solid var(--border-soft);
+  color: var(--muted);
+  vertical-align: middle;
+}
+tbody tr:last-child td { border-bottom: none; }
+tbody tr:hover { background: rgba(255, 255, 255, 0.015); }
+td.col-name { color: var(--text); font-weight: 600; }
+td.mono { font-variant-numeric: tabular-nums; }
+.dep-name { color: var(--text); }
+.link {
+  color: var(--link);
+  text-decoration: none;
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+}
+.link:hover { text-decoration: underline; }
+.link .ext { font-size: 11px; opacity: 0.8; }
+
+/* ---- RAG badges ---- */
+.rag {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  padding: 4px 11px;
+  border-radius: 999px;
+  font-size: 12.5px;
+  font-weight: 500;
+  white-space: nowrap;
+}
+.rag::before {
+  content: "";
+  width: 6px; height: 6px; border-radius: 50%;
+  background: currentColor;
+}
+.rag-mega { color: var(--violet); background: var(--violet-bg); }
+.rag-major { color: var(--amber); background: var(--amber-bg); }
+.rag-emerging { color: var(--green); background: var(--green-bg); }
+
+/* domain pill in the table */
+.domain-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  font-size: 13px;
+  color: var(--muted);
+}
+.domain-pill::before {
+  content: "";
+  width: 7px; height: 7px; border-radius: 50%;
+  background: var(--muted-2);
+}
+.domain-Hardware::before { background: var(--cyan); }
+.domain-Software::before { background: var(--violet); }
+.domain-Enabling::before { background: var(--amber); }
+.domain-Sensing::before { background: var(--green); }
+
+.count { color: var(--muted-2); font-size: 13.5px; margin: 20px 0 60px; }
+
+/* ---- footer ---- */
+.footer {
+  border-top: 1px solid var(--border-soft);
+  padding: 30px 0;
+  text-align: center;
+  color: var(--muted-2);
+  font-size: 13.5px;
+}
+
+.empty { padding: 40px; text-align: center; color: var(--muted-2); }
+
+@media (max-width: 720px) {
+  .controls { flex-direction: column; }
+  .stage-select { min-width: 0; padding: 12px 40px 12px 16px; }
+  .stats { grid-template-columns: 1fr; }
+  .title { font-size: 32px; }
+  .hero { font-size: 23px; }
+  .wrap { padding: 0 18px; }
+}
+
+</style>
+</head>
+<body>
+
+  <header class="topbar">
+    <div class="wrap topbar-inner">
+      
+      
+    </div>
+    <div class="wrap">
+      <h1 class="title">Quantum Technology Companies</h1>
+      <p class="subtitle">Quantum hardware &amp; software &middot; pre-seed to public &middot; compiled from public reporting</p>
+    </div>
+  </header>
+
+  <main class="wrap">
+    <div class="tags" id="filters">
+      <span class="tag tag-static">2026</span>
+      <button type="button" class="tag tag-all is-active" data-domain="all"><span class="dot"></span> All</button>
+      <button type="button" class="tag tag-filter" data-domain="Hardware"><span class="fdot d-hw"></span> Hardware <span class="tag-count" data-count="Hardware"></span></button>
+      <button type="button" class="tag tag-filter" data-domain="Software"><span class="fdot d-sw"></span> Software <span class="tag-count" data-count="Software"></span></button>
+      <button type="button" class="tag tag-filter" data-domain="Enabling"><span class="fdot d-en"></span> Enabling <span class="tag-count" data-count="Enabling"></span></button>
+      <button type="button" class="tag tag-filter" data-domain="Sensing"><span class="fdot d-se"></span> Sensing <span class="tag-count" data-count="Sensing"></span></button>
+    </div>
+
+    <blockquote class="hero">
+      Map the quantum industry's real capital &mdash; every layer, every stage, ranked and comparable.
+    </blockquote>
+
+    <div class="lede">
+      <p>
+        A research dashboard covering the quantum technology sector end to end &mdash; from
+        <em>superconducting, trapped-ion, neutral-atom, photonic and silicon-spin hardware</em>
+        to the algorithms, error-correction, control electronics and post-quantum security built
+        around it. Every company from pre-seed to publicly listed.
+      </p>
+      <p>
+        Sort and filter by domain, funding stage, capital raised, valuation, and a funding tier
+        that flags where the biggest bets sit &mdash; useful for tracking momentum, comparing
+        modalities, sizing the field, and mapping who is building what, where.
+      </p>
+    </div>
+
+    <p class="prompt">Want a company added or a figure corrected? Edit <code>companies.csv</code> and hit Refresh.</p>
+
+    <details class="notes">
+      <summary>Notes &amp; methodology</summary>
+      <div class="notes-body">
+        <p>
+          Each company is placed in one of four <strong>domains</strong> &mdash;
+          <strong>Hardware</strong> (qubit systems), <strong>Software</strong> (algorithms,
+          error correction, post-quantum security), <strong>Enabling</strong> (control
+          electronics, cryogenics, networking, foundries), and <strong>Sensing</strong>
+          (quantum metrology). Use the chips above the title to filter by domain.
+        </p>
+        <p>The <strong>funding tier</strong> badge buckets total capital raised:</p>
+        <ul>
+          <li><span class="rag rag-mega">Mega</span> &mdash; $500M or more raised.</li>
+          <li><span class="rag rag-major">Major</span> &mdash; $100M&ndash;$500M raised.</li>
+          <li><span class="rag rag-emerging">Emerging</span> &mdash; under $100M, or undisclosed.</li>
+        </ul>
+        <p class="caveat">
+          Figures are <strong>approximate</strong> and compiled from public reporting (company
+          announcements, The Quantum Insider, Crunchbase, SEC filings) as of mid-2026. Private
+          valuations and undisclosed rounds are estimates; public-company figures reflect recent
+          market capitalization, which moves daily. Treat this as a map of the field, not a
+          valuation source.
+        </p>
+      </div>
+    </details>
+
+    <section class="stats">
+      <div class="stat-card">
+        <div class="stat-label"><span class="stat-ic">&#9636;</span> COMPANIES TRACKED</div>
+        <div class="stat-value" id="statCompanies">&mdash;</div>
+        <div class="stat-sub">hardware, software &amp; enabling tech</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-label">TOTAL DISCLOSED FUNDING</div>
+        <div class="stat-value" id="statFunding">&mdash;</div>
+        <div class="stat-sub">sum of reported capital raised</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-label">PUBLICLY LISTED</div>
+        <div class="stat-value" id="statPublic">&mdash;</div>
+        <div class="stat-sub">trading on public markets</div>
+      </div>
+    </section>
+
+    <p class="updated">Snapshot compiled (UTC): <strong id="updated">&mdash;</strong></p>
+
+    <div class="controls">
+      <div class="search">
+        <span class="search-ic">&#9906;</span>
+        <input id="searchInput" type="text" placeholder="Search by company, focus, or country..." />
+      </div>
+      <select id="stageFilter" class="stage-select" aria-label="Filter by funding stage">
+        <option value="">All stages</option>
+      </select>
+    </div>
+
+    <div class="table-wrap">
+      <table id="table">
+        <thead>
+          <tr>
+            <th data-key="name" class="sortable col-name">Company <span class="arrow"></span></th>
+            <th data-key="domain" class="sortable">Domain <span class="arrow"></span></th>
+            <th class="col-focus">Focus</th>
+            <th data-key="stage" class="sortable">Stage <span class="arrow"></span></th>
+            <th data-key="founded" class="sortable num">Founded <span class="arrow"></span></th>
+            <th data-key="country" class="sortable">HQ <span class="arrow"></span></th>
+            <th data-key="raised_musd" class="sortable num">Raised <span class="arrow"></span></th>
+            <th data-key="valuation_musd" class="sortable num">Valuation <span class="arrow"></span></th>
+            <th data-key="tier" class="sortable">Tier <span class="arrow"></span></th>
+            <th>LINK</th>
+          </tr>
+        </thead>
+        <tbody id="tbody"></tbody>
+      </table>
+    </div>
+
+    <p class="count" id="count">&nbsp;</p>
+  </main>
+
+  <footer class="footer">
+    <div class="wrap">&copy; 2026 Quantum Companies Explorer &middot; figures compiled from public sources, approximate</div>
+  </footer>
+
+  
+
+<script>
+/* Quantum Technology Companies — client-side rendering, search, filter and sort. */
+
+const TIER_ORDER = { Emerging: 0, Major: 1, Mega: 2 };
+const TIER_CLASS = { Mega: "rag-mega", Major: "rag-major", Emerging: "rag-emerging" };
+
+// Rough maturity order, used to sort the stage dropdown sensibly.
+const STAGE_ORDER = [
+  "Pre-seed", "Seed", "Series A", "Series B", "Series C", "Series D",
+  "Series E", "Growth", "Pre-IPO", "Public", "Acquired", "Private",
+];
+
+let ALL = [];
+let sortKey = "raised_musd";
+let sortDir = "desc"; // 'asc' | 'desc'
+let domainFilter = "all";
+let stageFilter = ""; // "" = all stages
+
+function fmtMoney(musd) {
+  if (musd === null || musd === undefined || musd === "") return "—";
+  if (musd >= 1000) return "$" + (musd / 1000).toFixed(musd % 1000 === 0 ? 0 : 1) + "B";
+  return "$" + musd + "M";
+}
+
+function esc(s) {
+  return String(s).replace(/[&<>"']/g, (c) =>
+    ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c])
+  );
+}
+
+function fmtUpdated(iso) {
+  if (!iso) return "—";
+  return String(iso).replace("T", " ").replace(/\.\d+.*$/, "").replace("+00:00", "") + " UTC";
+}
+
+function sortRecords(rows) {
+  const dir = sortDir === "asc" ? 1 : -1;
+  return [...rows].sort((a, b) => {
+    let av = a[sortKey];
+    let bv = b[sortKey];
+    if (sortKey === "tier") {
+      av = TIER_ORDER[av];
+      bv = TIER_ORDER[bv];
+    }
+    // push blanks to the bottom regardless of direction
+    const an = av === null || av === undefined || av === "";
+    const bn = bv === null || bv === undefined || bv === "";
+    if (an && bn) return 0;
+    if (an) return 1;
+    if (bn) return -1;
+    if (typeof av === "string") return av.localeCompare(bv) * dir;
+    return (av - bv) * dir;
+  });
+}
+
+function render() {
+  const q = document.getElementById("searchInput").value.trim().toLowerCase();
+  let rows = ALL;
+  if (domainFilter !== "all") {
+    rows = rows.filter((r) => r.domain === domainFilter);
+  }
+  if (stageFilter) {
+    rows = rows.filter((r) => r.stage === stageFilter);
+  }
+  if (q) {
+    rows = rows.filter(
+      (r) =>
+        r.name.toLowerCase().includes(q) ||
+        r.focus.toLowerCase().includes(q) ||
+        r.hq.toLowerCase().includes(q)
+    );
+  }
+  rows = sortRecords(rows);
+
+  const tbody = document.getElementById("tbody");
+  if (!rows.length) {
+    tbody.innerHTML = `<tr><td colspan="10" class="empty">No companies match your filters.</td></tr>`;
+  } else {
+    tbody.innerHTML = rows
+      .map(
+        (r) => `
+      <tr>
+        <td class="col-name">${esc(r.name)}</td>
+        <td><span class="domain-pill domain-${esc(r.domain)}">${esc(r.domain)}</span></td>
+        <td class="col-focus">${esc(r.focus)}</td>
+        <td>${esc(r.stage)}</td>
+        <td class="num mono">${r.founded ?? "—"}</td>
+        <td>${esc(r.country)}</td>
+        <td class="num mono">${fmtMoney(r.raised_musd)}</td>
+        <td class="num mono">${fmtMoney(r.valuation_musd)}</td>
+        <td><span class="rag ${TIER_CLASS[r.tier]}">${r.tier}</span></td>
+        <td><a class="link" href="${esc(r.url)}" target="_blank" rel="noopener">site <span class="ext">&#8599;</span></a></td>
+      </tr>`
+      )
+      .join("");
+  }
+
+  const parts = [];
+  if (domainFilter !== "all") parts.push(domainFilter);
+  if (stageFilter) parts.push(stageFilter);
+  const suffix = parts.length ? ` · ${parts.join(" · ")}` : "";
+  document.getElementById("count").textContent =
+    `Showing ${rows.length} of ${ALL.length} companies${suffix}`;
+
+  document.querySelectorAll("th.sortable").forEach((th) => {
+    th.classList.remove("sort-asc", "sort-desc");
+    if (th.dataset.key === sortKey) {
+      th.classList.add(sortDir === "asc" ? "sort-asc" : "sort-desc");
+    }
+  });
+}
+
+function applyData(data) {
+  ALL = data.records || [];
+  document.getElementById("statCompanies").textContent =
+    data.summary.companies_tracked.toLocaleString();
+  document.getElementById("statFunding").textContent =
+    "$" + data.summary.total_raised_busd + "B";
+  document.getElementById("statPublic").textContent = data.summary.publicly_listed;
+  document.getElementById("updated").textContent = fmtUpdated(data.generated_at);
+
+  const counts = {};
+  ALL.forEach((r) => (counts[r.domain] = (counts[r.domain] || 0) + 1));
+  document.querySelectorAll(".tag-count").forEach((el) => {
+    el.textContent = counts[el.dataset.count] ?? 0;
+  });
+
+  populateStages();
+  render();
+}
+
+function populateStages() {
+  const present = [...new Set(ALL.map((r) => r.stage))];
+  present.sort((a, b) => {
+    const ai = STAGE_ORDER.indexOf(a);
+    const bi = STAGE_ORDER.indexOf(b);
+    return (ai < 0 ? 99 : ai) - (bi < 0 ? 99 : bi) || a.localeCompare(b);
+  });
+  const sel = document.getElementById("stageFilter");
+  const counts = {};
+  ALL.forEach((r) => (counts[r.stage] = (counts[r.stage] || 0) + 1));
+  sel.innerHTML =
+    `<option value="">All stages</option>` +
+    present
+      .map((s) => `<option value="${esc(s)}">${esc(s)} (${counts[s]})</option>`)
+      .join("");
+  sel.value = stageFilter;
+}
+
+function setDomainFilter(next) {
+  domainFilter = next;
+  document.querySelectorAll("#filters button").forEach((btn) => {
+    btn.classList.toggle("is-active", btn.dataset.domain === domainFilter);
+  });
+  render();
+}
+
+const EMBEDDED = {
+  "generated_at": "2026-07-07T08:15:00.970916+00:00",
+  "snapshot_year": 2026,
+  "source": "Compiled from public reporting (company announcements, The Quantum Insider, Crunchbase, SEC filings)",
+  "methodology": "Capital-raised and valuation figures are approximate, in USD, compiled from public sources as of mid-2026. Funding tier: Mega >= $500M, Major >= $100M, Emerging < $100M or undisclosed.",
+  "summary": {
+    "companies_tracked": 105,
+    "total_raised_busd": 12.4,
+    "publicly_listed": 8,
+    "domains": [
+      "Enabling",
+      "Hardware",
+      "Sensing",
+      "Software"
+    ]
+  },
+  "records": [
+    {
+      "name": "PsiQuantum",
+      "domain": "Hardware",
+      "focus": "Photonic (fault-tolerant)",
+      "stage": "Series E",
+      "founded": 2016,
+      "hq": "Palo Alto, USA",
+      "country": "USA",
+      "raised_musd": 2320,
+      "valuation_musd": 7000,
+      "years_active": 10,
+      "capital_per_yr_musd": 232.0,
+      "tier": "Mega",
+      "url": "https://psiquantum.com"
+    },
+    {
+      "name": "SandboxAQ",
+      "domain": "Software",
+      "focus": "Post-quantum crypto + AI simulation",
+      "stage": "Series E",
+      "founded": 2022,
+      "hq": "Palo Alto, USA",
+      "country": "USA",
+      "raised_musd": 950,
+      "valuation_musd": 5750,
+      "years_active": 4,
+      "capital_per_yr_musd": 237.5,
+      "tier": "Mega",
+      "url": "https://sandboxaq.com"
+    },
+    {
+      "name": "Quantinuum",
+      "domain": "Hardware",
+      "focus": "Trapped-ion (full-stack)",
+      "stage": "Public",
+      "founded": 2021,
+      "hq": "Broomfield, USA",
+      "country": "USA",
+      "raised_musd": 900,
+      "valuation_musd": 14000,
+      "years_active": 5,
+      "capital_per_yr_musd": 180.0,
+      "tier": "Mega",
+      "url": "https://quantinuum.com"
+    },
+    {
+      "name": "IonQ",
+      "domain": "Hardware",
+      "focus": "Trapped-ion",
+      "stage": "Public",
+      "founded": 2015,
+      "hq": "College Park, USA",
+      "country": "USA",
+      "raised_musd": 630,
+      "valuation_musd": 21500,
+      "years_active": 11,
+      "capital_per_yr_musd": 57.3,
+      "tier": "Mega",
+      "url": "https://ionq.com"
+    },
+    {
+      "name": "IQM Quantum Computers",
+      "domain": "Hardware",
+      "focus": "Superconducting",
+      "stage": "Series B",
+      "founded": 2018,
+      "hq": "Espoo, Finland",
+      "country": "Finland",
+      "raised_musd": 600,
+      "valuation_musd": null,
+      "years_active": 8,
+      "capital_per_yr_musd": 75.0,
+      "tier": "Mega",
+      "url": "https://meetiqm.com"
+    },
+    {
+      "name": "Infleqtion",
+      "domain": "Hardware",
+      "focus": "Neutral-atom + sensing",
+      "stage": "Public",
+      "founded": 2007,
+      "hq": "Boulder, USA",
+      "country": "USA",
+      "raised_musd": 550,
+      "valuation_musd": null,
+      "years_active": 19,
+      "capital_per_yr_musd": 28.9,
+      "tier": "Mega",
+      "url": "https://infleqtion.com"
+    },
+    {
+      "name": "Rigetti Computing",
+      "domain": "Hardware",
+      "focus": "Superconducting",
+      "stage": "Public",
+      "founded": 2013,
+      "hq": "Berkeley, USA",
+      "country": "USA",
+      "raised_musd": 500,
+      "valuation_musd": 7000,
+      "years_active": 13,
+      "capital_per_yr_musd": 38.5,
+      "tier": "Mega",
+      "url": "https://rigetti.com"
+    },
+    {
+      "name": "D-Wave Quantum",
+      "domain": "Hardware",
+      "focus": "Annealing + gate model",
+      "stage": "Public",
+      "founded": 1999,
+      "hq": "Burnaby, Canada",
+      "country": "Canada",
+      "raised_musd": 450,
+      "valuation_musd": 8600,
+      "years_active": 27,
+      "capital_per_yr_musd": 16.7,
+      "tier": "Major",
+      "url": "https://dwavesys.com"
+    },
+    {
+      "name": "Oxford Quantum Circuits",
+      "domain": "Hardware",
+      "focus": "Superconducting",
+      "stage": "Series C",
+      "founded": 2017,
+      "hq": "Reading, UK",
+      "country": "UK",
+      "raised_musd": 400,
+      "valuation_musd": null,
+      "years_active": 9,
+      "capital_per_yr_musd": 44.4,
+      "tier": "Major",
+      "url": "https://oqc.tech"
+    },
+    {
+      "name": "QuEra Computing",
+      "domain": "Hardware",
+      "focus": "Neutral-atom",
+      "stage": "Growth",
+      "founded": 2018,
+      "hq": "Boston, USA",
+      "country": "USA",
+      "raised_musd": 300,
+      "valuation_musd": 1000,
+      "years_active": 8,
+      "capital_per_yr_musd": 37.5,
+      "tier": "Major",
+      "url": "https://quera.com"
+    },
+    {
+      "name": "Quantum Machines",
+      "domain": "Enabling",
+      "focus": "Control systems (OPX)",
+      "stage": "Series C",
+      "founded": 2018,
+      "hq": "Tel Aviv, Israel",
+      "country": "Israel",
+      "raised_musd": 280,
+      "valuation_musd": null,
+      "years_active": 8,
+      "capital_per_yr_musd": 35.0,
+      "tier": "Major",
+      "url": "https://quantum-machines.co"
+    },
+    {
+      "name": "Xanadu",
+      "domain": "Hardware",
+      "focus": "Photonic",
+      "stage": "Public",
+      "founded": 2016,
+      "hq": "Toronto, Canada",
+      "country": "Canada",
+      "raised_musd": 275,
+      "valuation_musd": 3100,
+      "years_active": 10,
+      "capital_per_yr_musd": 27.5,
+      "tier": "Major",
+      "url": "https://xanadu.ai"
+    },
+    {
+      "name": "Multiverse Computing",
+      "domain": "Software",
+      "focus": "Quantum + AI model compression",
+      "stage": "Series B",
+      "founded": 2019,
+      "hq": "San Sebastian, Spain",
+      "country": "Spain",
+      "raised_musd": 250,
+      "valuation_musd": 1500,
+      "years_active": 7,
+      "capital_per_yr_musd": 35.7,
+      "tier": "Major",
+      "url": "https://multiversecomputing.com"
+    },
+    {
+      "name": "Classiq",
+      "domain": "Software",
+      "focus": "Circuit synthesis & design",
+      "stage": "Series C",
+      "founded": 2020,
+      "hq": "Tel Aviv, Israel",
+      "country": "Israel",
+      "raised_musd": 210,
+      "valuation_musd": null,
+      "years_active": 6,
+      "capital_per_yr_musd": 35.0,
+      "tier": "Major",
+      "url": "https://classiq.io"
+    },
+    {
+      "name": "QuantWare",
+      "domain": "Enabling",
+      "focus": "Superconducting QPU foundry",
+      "stage": "Series B",
+      "founded": 2020,
+      "hq": "Delft, Netherlands",
+      "country": "Netherlands",
+      "raised_musd": 205,
+      "valuation_musd": null,
+      "years_active": 6,
+      "capital_per_yr_musd": 34.2,
+      "tier": "Major",
+      "url": "https://quantware.com"
+    },
+    {
+      "name": "Riverlane",
+      "domain": "Software",
+      "focus": "Quantum error correction",
+      "stage": "Series C",
+      "founded": 2016,
+      "hq": "Cambridge, UK",
+      "country": "UK",
+      "raised_musd": 195,
+      "valuation_musd": null,
+      "years_active": 10,
+      "capital_per_yr_musd": 19.5,
+      "tier": "Major",
+      "url": "https://riverlane.com"
+    },
+    {
+      "name": "Pasqal",
+      "domain": "Hardware",
+      "focus": "Neutral-atom",
+      "stage": "Pre-IPO",
+      "founded": 2019,
+      "hq": "Paris, France",
+      "country": "France",
+      "raised_musd": 160,
+      "valuation_musd": 2000,
+      "years_active": 7,
+      "capital_per_yr_musd": 22.9,
+      "tier": "Major",
+      "url": "https://pasqal.com"
+    },
+    {
+      "name": "Quantum Computing Inc",
+      "domain": "Hardware",
+      "focus": "Photonic / thermodynamic",
+      "stage": "Public",
+      "founded": 2018,
+      "hq": "Hoboken, USA",
+      "country": "USA",
+      "raised_musd": 150,
+      "valuation_musd": 2200,
+      "years_active": 8,
+      "capital_per_yr_musd": 18.8,
+      "tier": "Major",
+      "url": "https://quantumcomputinginc.com"
+    },
+    {
+      "name": "Arqit Quantum",
+      "domain": "Software",
+      "focus": "Symmetric-key quantum encryption",
+      "stage": "Public",
+      "founded": 2017,
+      "hq": "London, UK",
+      "country": "UK",
+      "raised_musd": 150,
+      "valuation_musd": null,
+      "years_active": 9,
+      "capital_per_yr_musd": 16.7,
+      "tier": "Major",
+      "url": "https://arqit.uk"
+    },
+    {
+      "name": "Photonic Inc",
+      "domain": "Hardware",
+      "focus": "Silicon photonic spin",
+      "stage": "Series B",
+      "founded": 2016,
+      "hq": "Vancouver, Canada",
+      "country": "Canada",
+      "raised_musd": 140,
+      "valuation_musd": null,
+      "years_active": 10,
+      "capital_per_yr_musd": 14.0,
+      "tier": "Major",
+      "url": "https://photonic.com"
+    },
+    {
+      "name": "Alice & Bob",
+      "domain": "Hardware",
+      "focus": "Cat-qubit superconducting",
+      "stage": "Series B",
+      "founded": 2020,
+      "hq": "Paris, France",
+      "country": "France",
+      "raised_musd": 140,
+      "valuation_musd": null,
+      "years_active": 6,
+      "capital_per_yr_musd": 23.3,
+      "tier": "Major",
+      "url": "https://alice-bob.com"
+    },
+    {
+      "name": "Quobly",
+      "domain": "Hardware",
+      "focus": "Silicon spin (CMOS)",
+      "stage": "Series A",
+      "founded": 2022,
+      "hq": "Grenoble, France",
+      "country": "France",
+      "raised_musd": 125,
+      "valuation_musd": null,
+      "years_active": 4,
+      "capital_per_yr_musd": 31.2,
+      "tier": "Major",
+      "url": "https://quobly.io"
+    },
+    {
+      "name": "Diraq",
+      "domain": "Hardware",
+      "focus": "Silicon spin",
+      "stage": "Series A",
+      "founded": 2022,
+      "hq": "Sydney, Australia",
+      "country": "Australia",
+      "raised_musd": 120,
+      "valuation_musd": null,
+      "years_active": 4,
+      "capital_per_yr_musd": 30.0,
+      "tier": "Major",
+      "url": "https://diraq.com"
+    },
+    {
+      "name": "Terra Quantum",
+      "domain": "Software",
+      "focus": "Algorithms / QaaS",
+      "stage": "Series B",
+      "founded": 2019,
+      "hq": "St. Gallen, Switzerland",
+      "country": "Switzerland",
+      "raised_musd": 115,
+      "valuation_musd": null,
+      "years_active": 7,
+      "capital_per_yr_musd": 16.4,
+      "tier": "Major",
+      "url": "https://terraquantum.swiss"
+    },
+    {
+      "name": "Q-CTRL",
+      "domain": "Software",
+      "focus": "Control & error suppression",
+      "stage": "Series B",
+      "founded": 2017,
+      "hq": "Sydney, Australia",
+      "country": "Australia",
+      "raised_musd": 115,
+      "valuation_musd": null,
+      "years_active": 9,
+      "capital_per_yr_musd": 12.8,
+      "tier": "Major",
+      "url": "https://q-ctrl.com"
+    },
+    {
+      "name": "Quantum Motion",
+      "domain": "Hardware",
+      "focus": "Silicon spin",
+      "stage": "Series B",
+      "founded": 2017,
+      "hq": "London, UK",
+      "country": "UK",
+      "raised_musd": 110,
+      "valuation_musd": null,
+      "years_active": 9,
+      "capital_per_yr_musd": 12.2,
+      "tier": "Major",
+      "url": "https://quantummotion.tech"
+    },
+    {
+      "name": "Silicon Quantum Computing",
+      "domain": "Hardware",
+      "focus": "Silicon atom qubits",
+      "stage": "Private",
+      "founded": 2017,
+      "hq": "Sydney, Australia",
+      "country": "Australia",
+      "raised_musd": 100,
+      "valuation_musd": null,
+      "years_active": 9,
+      "capital_per_yr_musd": 11.1,
+      "tier": "Major",
+      "url": "https://sqc.com.au"
+    },
+    {
+      "name": "Quantum Art",
+      "domain": "Hardware",
+      "focus": "Trapped-ion",
+      "stage": "Series A",
+      "founded": 2022,
+      "hq": "Rehovot, Israel",
+      "country": "Israel",
+      "raised_musd": 100,
+      "valuation_musd": null,
+      "years_active": 4,
+      "capital_per_yr_musd": 25.0,
+      "tier": "Major",
+      "url": "https://quantum-art.tech"
+    },
+    {
+      "name": "Atom Computing",
+      "domain": "Hardware",
+      "focus": "Neutral-atom",
+      "stage": "Series B",
+      "founded": 2018,
+      "hq": "Berkeley, USA",
+      "country": "USA",
+      "raised_musd": 95,
+      "valuation_musd": null,
+      "years_active": 8,
+      "capital_per_yr_musd": 11.9,
+      "tier": "Emerging",
+      "url": "https://atom-computing.com"
+    },
+    {
+      "name": "SEEQC",
+      "domain": "Hardware",
+      "focus": "Digital superconducting",
+      "stage": "Series B",
+      "founded": 2019,
+      "hq": "Elmsford, USA",
+      "country": "USA",
+      "raised_musd": 85,
+      "valuation_musd": null,
+      "years_active": 7,
+      "capital_per_yr_musd": 12.1,
+      "tier": "Emerging",
+      "url": "https://seeqc.com"
+    },
+    {
+      "name": "Oxford Ionics",
+      "domain": "Hardware",
+      "focus": "Trapped-ion (chip)",
+      "stage": "Acquired",
+      "founded": 2019,
+      "hq": "Oxford, UK",
+      "country": "UK",
+      "raised_musd": 80,
+      "valuation_musd": 1080,
+      "years_active": 7,
+      "capital_per_yr_musd": 11.4,
+      "tier": "Emerging",
+      "url": "https://oxfordionics.com"
+    },
+    {
+      "name": "ORCA Computing",
+      "domain": "Hardware",
+      "focus": "Photonic",
+      "stage": "Series B",
+      "founded": 2019,
+      "hq": "London, UK",
+      "country": "UK",
+      "raised_musd": 80,
+      "valuation_musd": null,
+      "years_active": 7,
+      "capital_per_yr_musd": 11.4,
+      "tier": "Emerging",
+      "url": "https://orcacomputing.com"
+    },
+    {
+      "name": "Quantum Source",
+      "domain": "Hardware",
+      "focus": "Photonic",
+      "stage": "Series A",
+      "founded": 2021,
+      "hq": "Rehovot, Israel",
+      "country": "Israel",
+      "raised_musd": 77,
+      "valuation_musd": null,
+      "years_active": 5,
+      "capital_per_yr_musd": 15.4,
+      "tier": "Emerging",
+      "url": "https://quantumsource.io"
+    },
+    {
+      "name": "Quantum Circuits",
+      "domain": "Hardware",
+      "focus": "Dual-rail superconducting",
+      "stage": "Series A",
+      "founded": 2015,
+      "hq": "New Haven, USA",
+      "country": "USA",
+      "raised_musd": 76,
+      "valuation_musd": null,
+      "years_active": 11,
+      "capital_per_yr_musd": 6.9,
+      "tier": "Emerging",
+      "url": "https://quantumcircuits.com"
+    },
+    {
+      "name": "Universal Quantum",
+      "domain": "Hardware",
+      "focus": "Trapped-ion (scalable)",
+      "stage": "Series A",
+      "founded": 2018,
+      "hq": "Brighton, UK",
+      "country": "UK",
+      "raised_musd": 75,
+      "valuation_musd": null,
+      "years_active": 8,
+      "capital_per_yr_musd": 9.4,
+      "tier": "Emerging",
+      "url": "https://universalquantum.com"
+    },
+    {
+      "name": "Quandela",
+      "domain": "Hardware",
+      "focus": "Photonic",
+      "stage": "Series B",
+      "founded": 2017,
+      "hq": "Massy, France",
+      "country": "France",
+      "raised_musd": 70,
+      "valuation_musd": null,
+      "years_active": 9,
+      "capital_per_yr_musd": 7.8,
+      "tier": "Emerging",
+      "url": "https://quandela.com"
+    },
+    {
+      "name": "Qolab",
+      "domain": "Hardware",
+      "focus": "Superconducting",
+      "stage": "Series B",
+      "founded": 2022,
+      "hq": "Santa Barbara, USA",
+      "country": "USA",
+      "raised_musd": 70,
+      "valuation_musd": null,
+      "years_active": 4,
+      "capital_per_yr_musd": 17.5,
+      "tier": "Emerging",
+      "url": "https://qolab.ai"
+    },
+    {
+      "name": "Qrypt",
+      "domain": "Software",
+      "focus": "Quantum-secure encryption",
+      "stage": "Series B",
+      "founded": 2018,
+      "hq": "New York, USA",
+      "country": "USA",
+      "raised_musd": 65,
+      "valuation_musd": null,
+      "years_active": 8,
+      "capital_per_yr_musd": 8.1,
+      "tier": "Emerging",
+      "url": "https://qrypt.com"
+    },
+    {
+      "name": "ID Quantique",
+      "domain": "Software",
+      "focus": "Quantum-safe security (QKD)",
+      "stage": "Acquired",
+      "founded": 2001,
+      "hq": "Geneva, Switzerland",
+      "country": "Switzerland",
+      "raised_musd": 65,
+      "valuation_musd": null,
+      "years_active": 25,
+      "capital_per_yr_musd": 2.6,
+      "tier": "Emerging",
+      "url": "https://idquantique.com"
+    },
+    {
+      "name": "PQShield",
+      "domain": "Software",
+      "focus": "Post-quantum cryptography",
+      "stage": "Series B",
+      "founded": 2018,
+      "hq": "Oxford, UK",
+      "country": "UK",
+      "raised_musd": 63,
+      "valuation_musd": null,
+      "years_active": 8,
+      "capital_per_yr_musd": 7.9,
+      "tier": "Emerging",
+      "url": "https://pqshield.com"
+    },
+    {
+      "name": "Equal1",
+      "domain": "Hardware",
+      "focus": "Silicon spin (CMOS)",
+      "stage": "Series A",
+      "founded": 2017,
+      "hq": "Dublin, Ireland",
+      "country": "Ireland",
+      "raised_musd": 60,
+      "valuation_musd": null,
+      "years_active": 9,
+      "capital_per_yr_musd": 6.7,
+      "tier": "Emerging",
+      "url": "https://equal1.com"
+    },
+    {
+      "name": "Phasecraft",
+      "domain": "Software",
+      "focus": "Algorithms (materials & chemistry)",
+      "stage": "Series B",
+      "founded": 2018,
+      "hq": "London, UK",
+      "country": "UK",
+      "raised_musd": 56,
+      "valuation_musd": null,
+      "years_active": 8,
+      "capital_per_yr_musd": 7.0,
+      "tier": "Emerging",
+      "url": "https://phasecraft.io"
+    },
+    {
+      "name": "QuintessenceLabs",
+      "domain": "Software",
+      "focus": "Quantum-safe security (QKD/QRNG)",
+      "stage": "Private",
+      "founded": 2008,
+      "hq": "Canberra, Australia",
+      "country": "Australia",
+      "raised_musd": 53,
+      "valuation_musd": null,
+      "years_active": 18,
+      "capital_per_yr_musd": 2.9,
+      "tier": "Emerging",
+      "url": "https://quintessencelabs.com"
+    },
+    {
+      "name": "planqc",
+      "domain": "Hardware",
+      "focus": "Neutral-atom",
+      "stage": "Series A",
+      "founded": 2022,
+      "hq": "Munich, Germany",
+      "country": "Germany",
+      "raised_musd": 50,
+      "valuation_musd": null,
+      "years_active": 4,
+      "capital_per_yr_musd": 12.5,
+      "tier": "Emerging",
+      "url": "https://planqc.eu"
+    },
+    {
+      "name": "Nord Quantique",
+      "domain": "Hardware",
+      "focus": "Bosonic superconducting",
+      "stage": "Seed",
+      "founded": 2020,
+      "hq": "Sherbrooke, Canada",
+      "country": "Canada",
+      "raised_musd": 40,
+      "valuation_musd": null,
+      "years_active": 6,
+      "capital_per_yr_musd": 6.7,
+      "tier": "Emerging",
+      "url": "https://nordquantique.ca"
+    },
+    {
+      "name": "Quantum Brilliance",
+      "domain": "Hardware",
+      "focus": "Diamond NV (room-temp)",
+      "stage": "Series A",
+      "founded": 2019,
+      "hq": "Canberra, Australia",
+      "country": "Australia",
+      "raised_musd": 40,
+      "valuation_musd": null,
+      "years_active": 7,
+      "capital_per_yr_musd": 5.7,
+      "tier": "Emerging",
+      "url": "https://quantumbrilliance.com"
+    },
+    {
+      "name": "QC Ware",
+      "domain": "Software",
+      "focus": "Algorithms (Forge)",
+      "stage": "Series B",
+      "founded": 2014,
+      "hq": "Palo Alto, USA",
+      "country": "USA",
+      "raised_musd": 40,
+      "valuation_musd": null,
+      "years_active": 12,
+      "capital_per_yr_musd": 3.3,
+      "tier": "Emerging",
+      "url": "https://qcware.com"
+    },
+    {
+      "name": "Qunnect",
+      "domain": "Enabling",
+      "focus": "Quantum networking",
+      "stage": "Series A",
+      "founded": 2017,
+      "hq": "Brooklyn, USA",
+      "country": "USA",
+      "raised_musd": 40,
+      "valuation_musd": null,
+      "years_active": 9,
+      "capital_per_yr_musd": 4.4,
+      "tier": "Emerging",
+      "url": "https://qunnect.inc"
+    },
+    {
+      "name": "Algorithmiq",
+      "domain": "Software",
+      "focus": "Algorithms (life sciences)",
+      "stage": "Series B",
+      "founded": 2020,
+      "hq": "Helsinki, Finland",
+      "country": "Finland",
+      "raised_musd": 36,
+      "valuation_musd": null,
+      "years_active": 6,
+      "capital_per_yr_musd": 6.0,
+      "tier": "Emerging",
+      "url": "https://algorithmiq.fi"
+    },
+    {
+      "name": "Strangeworks",
+      "domain": "Software",
+      "focus": "Multi-vendor platform",
+      "stage": "Series A",
+      "founded": 2018,
+      "hq": "Austin, USA",
+      "country": "USA",
+      "raised_musd": 34,
+      "valuation_musd": null,
+      "years_active": 8,
+      "capital_per_yr_musd": 4.2,
+      "tier": "Emerging",
+      "url": "https://strangeworks.com"
+    },
+    {
+      "name": "Qblox",
+      "domain": "Enabling",
+      "focus": "Control electronics",
+      "stage": "Series A",
+      "founded": 2019,
+      "hq": "Delft, Netherlands",
+      "country": "Netherlands",
+      "raised_musd": 32,
+      "valuation_musd": null,
+      "years_active": 7,
+      "capital_per_yr_musd": 4.6,
+      "tier": "Emerging",
+      "url": "https://qblox.com"
+    },
+    {
+      "name": "QpiAI",
+      "domain": "Hardware",
+      "focus": "Full-stack quantum + AI",
+      "stage": "Series A",
+      "founded": 2019,
+      "hq": "Bengaluru, India",
+      "country": "India",
+      "raised_musd": 32,
+      "valuation_musd": 162,
+      "years_active": 7,
+      "capital_per_yr_musd": 4.6,
+      "tier": "Emerging",
+      "url": "https://qpiai.tech"
+    },
+    {
+      "name": "C12",
+      "domain": "Hardware",
+      "focus": "Carbon-nanotube spin",
+      "stage": "Series A",
+      "founded": 2020,
+      "hq": "Paris, France",
+      "country": "France",
+      "raised_musd": 30,
+      "valuation_musd": null,
+      "years_active": 6,
+      "capital_per_yr_musd": 5.0,
+      "tier": "Emerging",
+      "url": "https://c12quantum.com"
+    },
+    {
+      "name": "QuSecure",
+      "domain": "Software",
+      "focus": "Post-quantum cryptography",
+      "stage": "Series A",
+      "founded": 2019,
+      "hq": "San Mateo, USA",
+      "country": "USA",
+      "raised_musd": 28,
+      "valuation_musd": null,
+      "years_active": 7,
+      "capital_per_yr_musd": 4.0,
+      "tier": "Emerging",
+      "url": "https://qusecure.com"
+    },
+    {
+      "name": "Qedma",
+      "domain": "Software",
+      "focus": "Error mitigation",
+      "stage": "Series A",
+      "founded": 2020,
+      "hq": "Tel Aviv, Israel",
+      "country": "Israel",
+      "raised_musd": 26,
+      "valuation_musd": null,
+      "years_active": 6,
+      "capital_per_yr_musd": 4.3,
+      "tier": "Emerging",
+      "url": "https://qedma.com"
+    },
+    {
+      "name": "Maybell Quantum",
+      "domain": "Enabling",
+      "focus": "Dilution refrigerators",
+      "stage": "Series A",
+      "founded": 2021,
+      "hq": "Denver, USA",
+      "country": "USA",
+      "raised_musd": 25,
+      "valuation_musd": null,
+      "years_active": 5,
+      "capital_per_yr_musd": 5.0,
+      "tier": "Emerging",
+      "url": "https://maybellquantum.com"
+    },
+    {
+      "name": "QunaSys",
+      "domain": "Software",
+      "focus": "Quantum chemistry",
+      "stage": "Series B",
+      "founded": 2018,
+      "hq": "Tokyo, Japan",
+      "country": "Japan",
+      "raised_musd": 25,
+      "valuation_musd": null,
+      "years_active": 8,
+      "capital_per_yr_musd": 3.1,
+      "tier": "Emerging",
+      "url": "https://qunasys.com"
+    },
+    {
+      "name": "Qnami",
+      "domain": "Sensing",
+      "focus": "NV diamond microscopy",
+      "stage": "Series A",
+      "founded": 2017,
+      "hq": "Basel, Switzerland",
+      "country": "Switzerland",
+      "raised_musd": 25,
+      "valuation_musd": null,
+      "years_active": 9,
+      "capital_per_yr_musd": 2.8,
+      "tier": "Emerging",
+      "url": "https://qnami.ch"
+    },
+    {
+      "name": "QuiX Quantum",
+      "domain": "Hardware",
+      "focus": "Photonic",
+      "stage": "Series A",
+      "founded": 2019,
+      "hq": "Enschede, Netherlands",
+      "country": "Netherlands",
+      "raised_musd": 25,
+      "valuation_musd": null,
+      "years_active": 7,
+      "capital_per_yr_musd": 3.6,
+      "tier": "Emerging",
+      "url": "https://quixquantum.com"
+    },
+    {
+      "name": "QNu Labs",
+      "domain": "Software",
+      "focus": "Quantum-safe security",
+      "stage": "Series B",
+      "founded": 2016,
+      "hq": "Bengaluru, India",
+      "country": "India",
+      "raised_musd": 22,
+      "valuation_musd": null,
+      "years_active": 10,
+      "capital_per_yr_musd": 2.2,
+      "tier": "Emerging",
+      "url": "https://qnulabs.com"
+    },
+    {
+      "name": "Alpine Quantum Technologies",
+      "domain": "Hardware",
+      "focus": "Trapped-ion",
+      "stage": "Series A",
+      "founded": 2018,
+      "hq": "Innsbruck, Austria",
+      "country": "Austria",
+      "raised_musd": 20,
+      "valuation_musd": null,
+      "years_active": 8,
+      "capital_per_yr_musd": 2.5,
+      "tier": "Emerging",
+      "url": "https://aqt.eu"
+    },
+    {
+      "name": "SpeQtral",
+      "domain": "Enabling",
+      "focus": "Satellite QKD",
+      "stage": "Series A",
+      "founded": 2018,
+      "hq": "Singapore",
+      "country": "Singapore",
+      "raised_musd": 19,
+      "valuation_musd": null,
+      "years_active": 8,
+      "capital_per_yr_musd": 2.4,
+      "tier": "Emerging",
+      "url": "https://speqtral.space"
+    },
+    {
+      "name": "Horizon Quantum Computing",
+      "domain": "Software",
+      "focus": "Compilers & dev tools",
+      "stage": "Seed",
+      "founded": 2018,
+      "hq": "Singapore",
+      "country": "Singapore",
+      "raised_musd": 18,
+      "valuation_musd": null,
+      "years_active": 8,
+      "capital_per_yr_musd": 2.2,
+      "tier": "Emerging",
+      "url": "https://horizonquantum.com"
+    },
+    {
+      "name": "Qubit Pharmaceuticals",
+      "domain": "Software",
+      "focus": "Drug discovery",
+      "stage": "Seed",
+      "founded": 2020,
+      "hq": "Paris, France",
+      "country": "France",
+      "raised_musd": 16,
+      "valuation_musd": null,
+      "years_active": 6,
+      "capital_per_yr_musd": 2.7,
+      "tier": "Emerging",
+      "url": "https://qubit-pharmaceuticals.com"
+    },
+    {
+      "name": "Aliro Quantum",
+      "domain": "Software",
+      "focus": "Quantum networking software",
+      "stage": "Seed",
+      "founded": 2019,
+      "hq": "Boston, USA",
+      "country": "USA",
+      "raised_musd": 14,
+      "valuation_musd": null,
+      "years_active": 7,
+      "capital_per_yr_musd": 2.0,
+      "tier": "Emerging",
+      "url": "https://aliroquantum.com"
+    },
+    {
+      "name": "Kipu Quantum",
+      "domain": "Software",
+      "focus": "Application-specific algorithms",
+      "stage": "Seed",
+      "founded": 2021,
+      "hq": "Karlsruhe, Germany",
+      "country": "Germany",
+      "raised_musd": 13,
+      "valuation_musd": null,
+      "years_active": 5,
+      "capital_per_yr_musd": 2.6,
+      "tier": "Emerging",
+      "url": "https://kipu-quantum.com"
+    },
+    {
+      "name": "Menten AI",
+      "domain": "Software",
+      "focus": "Quantum for drug design",
+      "stage": "Seed",
+      "founded": 2018,
+      "hq": "San Francisco, USA",
+      "country": "USA",
+      "raised_musd": 12,
+      "valuation_musd": null,
+      "years_active": 8,
+      "capital_per_yr_musd": 1.5,
+      "tier": "Emerging",
+      "url": "https://menten.ai"
+    },
+    {
+      "name": "Nu Quantum",
+      "domain": "Enabling",
+      "focus": "Quantum networking",
+      "stage": "Seed",
+      "founded": 2018,
+      "hq": "Cambridge, UK",
+      "country": "UK",
+      "raised_musd": 12,
+      "valuation_musd": null,
+      "years_active": 8,
+      "capital_per_yr_musd": 1.5,
+      "tier": "Emerging",
+      "url": "https://nu-quantum.com"
+    },
+    {
+      "name": "eleQtron",
+      "domain": "Hardware",
+      "focus": "Trapped-ion",
+      "stage": "Seed",
+      "founded": 2020,
+      "hq": "Siegen, Germany",
+      "country": "Germany",
+      "raised_musd": 11,
+      "valuation_musd": null,
+      "years_active": 6,
+      "capital_per_yr_musd": 1.8,
+      "tier": "Emerging",
+      "url": "https://eleqtron.com"
+    },
+    {
+      "name": "HQS Quantum Simulations",
+      "domain": "Software",
+      "focus": "Materials & chemistry",
+      "stage": "Seed",
+      "founded": 2017,
+      "hq": "Karlsruhe, Germany",
+      "country": "Germany",
+      "raised_musd": 10,
+      "valuation_musd": null,
+      "years_active": 9,
+      "capital_per_yr_musd": 1.1,
+      "tier": "Emerging",
+      "url": "https://quantumsimulations.de"
+    },
+    {
+      "name": "QphoX",
+      "domain": "Enabling",
+      "focus": "Quantum transducer",
+      "stage": "Seed",
+      "founded": 2020,
+      "hq": "Delft, Netherlands",
+      "country": "Netherlands",
+      "raised_musd": 10,
+      "valuation_musd": null,
+      "years_active": 6,
+      "capital_per_yr_musd": 1.7,
+      "tier": "Emerging",
+      "url": "https://qphox.eu"
+    },
+    {
+      "name": "SBQuantum",
+      "domain": "Sensing",
+      "focus": "Quantum magnetometer",
+      "stage": "Seed",
+      "founded": 2016,
+      "hq": "Sherbrooke, Canada",
+      "country": "Canada",
+      "raised_musd": 10,
+      "valuation_musd": null,
+      "years_active": 10,
+      "capital_per_yr_musd": 1.0,
+      "tier": "Emerging",
+      "url": "https://sbquantum.com"
+    },
+    {
+      "name": "KETS Quantum Security",
+      "domain": "Enabling",
+      "focus": "QKD photonic chips",
+      "stage": "Seed",
+      "founded": 2016,
+      "hq": "Bristol, UK",
+      "country": "UK",
+      "raised_musd": 10,
+      "valuation_musd": null,
+      "years_active": 10,
+      "capital_per_yr_musd": 1.0,
+      "tier": "Emerging",
+      "url": "https://kets-quantum.com"
+    },
+    {
+      "name": "Aegiq",
+      "domain": "Hardware",
+      "focus": "Photonic (single-photon)",
+      "stage": "Seed",
+      "founded": 2019,
+      "hq": "Sheffield, UK",
+      "country": "UK",
+      "raised_musd": 10,
+      "valuation_musd": null,
+      "years_active": 7,
+      "capital_per_yr_musd": 1.4,
+      "tier": "Emerging",
+      "url": "https://aegiq.com"
+    },
+    {
+      "name": "Welinq",
+      "domain": "Enabling",
+      "focus": "Quantum memories & interconnect",
+      "stage": "Seed",
+      "founded": 2022,
+      "hq": "Paris, France",
+      "country": "France",
+      "raised_musd": 10,
+      "valuation_musd": null,
+      "years_active": 4,
+      "capital_per_yr_musd": 2.5,
+      "tier": "Emerging",
+      "url": "https://welinq.fr"
+    },
+    {
+      "name": "Sparrow Quantum",
+      "domain": "Enabling",
+      "focus": "Single-photon sources",
+      "stage": "Seed",
+      "founded": 2016,
+      "hq": "Copenhagen, Denmark",
+      "country": "Denmark",
+      "raised_musd": 9,
+      "valuation_musd": null,
+      "years_active": 10,
+      "capital_per_yr_musd": 0.9,
+      "tier": "Emerging",
+      "url": "https://sparrowquantum.com"
+    },
+    {
+      "name": "Atlantic Quantum",
+      "domain": "Hardware",
+      "focus": "Fluxonium superconducting",
+      "stage": "Seed",
+      "founded": 2022,
+      "hq": "Cambridge, USA",
+      "country": "USA",
+      "raised_musd": 9,
+      "valuation_musd": null,
+      "years_active": 4,
+      "capital_per_yr_musd": 2.2,
+      "tier": "Emerging",
+      "url": "https://atlantic-quantum.com"
+    },
+    {
+      "name": "ParityQC",
+      "domain": "Software",
+      "focus": "Architecture & compiler",
+      "stage": "Seed",
+      "founded": 2020,
+      "hq": "Innsbruck, Austria",
+      "country": "Austria",
+      "raised_musd": 8,
+      "valuation_musd": null,
+      "years_active": 6,
+      "capital_per_yr_musd": 1.3,
+      "tier": "Emerging",
+      "url": "https://parityqc.com"
+    },
+    {
+      "name": "Agnostiq",
+      "domain": "Software",
+      "focus": "Workflow orchestration",
+      "stage": "Seed",
+      "founded": 2018,
+      "hq": "Toronto, Canada",
+      "country": "Canada",
+      "raised_musd": 8,
+      "valuation_musd": null,
+      "years_active": 8,
+      "capital_per_yr_musd": 1.0,
+      "tier": "Emerging",
+      "url": "https://agnostiq.ai"
+    },
+    {
+      "name": "Quantum Dice",
+      "domain": "Enabling",
+      "focus": "Quantum random-number chips",
+      "stage": "Seed",
+      "founded": 2020,
+      "hq": "Oxford, UK",
+      "country": "UK",
+      "raised_musd": 8,
+      "valuation_musd": null,
+      "years_active": 6,
+      "capital_per_yr_musd": 1.3,
+      "tier": "Emerging",
+      "url": "https://quantum-dice.com"
+    },
+    {
+      "name": "EeroQ",
+      "domain": "Hardware",
+      "focus": "Electron-on-helium",
+      "stage": "Seed",
+      "founded": 2016,
+      "hq": "Chicago, USA",
+      "country": "USA",
+      "raised_musd": 7,
+      "valuation_musd": null,
+      "years_active": 10,
+      "capital_per_yr_musd": 0.7,
+      "tier": "Emerging",
+      "url": "https://eeroq.com"
+    },
+    {
+      "name": "Cerca Magnetics",
+      "domain": "Sensing",
+      "focus": "Wearable MEG brain scanner",
+      "stage": "Seed",
+      "founded": 2020,
+      "hq": "Nottingham, UK",
+      "country": "UK",
+      "raised_musd": 7,
+      "valuation_musd": null,
+      "years_active": 6,
+      "capital_per_yr_musd": 1.2,
+      "tier": "Emerging",
+      "url": "https://cercamagnetics.com"
+    },
+    {
+      "name": "Entropica Labs",
+      "domain": "Software",
+      "focus": "Error-correction software",
+      "stage": "Seed",
+      "founded": 2018,
+      "hq": "Singapore",
+      "country": "Singapore",
+      "raised_musd": 5,
+      "valuation_musd": null,
+      "years_active": 8,
+      "capital_per_yr_musd": 0.6,
+      "tier": "Emerging",
+      "url": "https://entropicalabs.com"
+    },
+    {
+      "name": "Bleximo",
+      "domain": "Hardware",
+      "focus": "Application-specific superconducting",
+      "stage": "Seed",
+      "founded": 2017,
+      "hq": "Berkeley, USA",
+      "country": "USA",
+      "raised_musd": 5,
+      "valuation_musd": null,
+      "years_active": 9,
+      "capital_per_yr_musd": 0.6,
+      "tier": "Emerging",
+      "url": "https://bleximo.com"
+    },
+    {
+      "name": "BosonQ Psi",
+      "domain": "Software",
+      "focus": "Engineering simulation",
+      "stage": "Seed",
+      "founded": 2020,
+      "hq": "Bhilai, India",
+      "country": "India",
+      "raised_musd": 5,
+      "valuation_musd": null,
+      "years_active": 6,
+      "capital_per_yr_musd": 0.8,
+      "tier": "Emerging",
+      "url": "https://bosonqpsi.com"
+    },
+    {
+      "name": "Haiqu",
+      "domain": "Software",
+      "focus": "Quantum runtime software",
+      "stage": "Seed",
+      "founded": 2022,
+      "hq": "Chicago, USA",
+      "country": "USA",
+      "raised_musd": 4,
+      "valuation_musd": null,
+      "years_active": 4,
+      "capital_per_yr_musd": 1.0,
+      "tier": "Emerging",
+      "url": "https://haiqu.ai"
+    },
+    {
+      "name": "Anyon Systems",
+      "domain": "Hardware",
+      "focus": "Superconducting",
+      "stage": "Private",
+      "founded": 2014,
+      "hq": "Montreal, Canada",
+      "country": "Canada",
+      "raised_musd": null,
+      "valuation_musd": null,
+      "years_active": 12,
+      "capital_per_yr_musd": null,
+      "tier": "Emerging",
+      "url": "https://anyonsys.com"
+    },
+    {
+      "name": "Qilimanjaro",
+      "domain": "Hardware",
+      "focus": "Analog / coherent",
+      "stage": "Seed",
+      "founded": 2020,
+      "hq": "Barcelona, Spain",
+      "country": "Spain",
+      "raised_musd": null,
+      "valuation_musd": null,
+      "years_active": 6,
+      "capital_per_yr_musd": null,
+      "tier": "Emerging",
+      "url": "https://qilimanjaro.tech"
+    },
+    {
+      "name": "Semiqon",
+      "domain": "Hardware",
+      "focus": "Silicon CMOS",
+      "stage": "Seed",
+      "founded": 2023,
+      "hq": "Espoo, Finland",
+      "country": "Finland",
+      "raised_musd": null,
+      "valuation_musd": null,
+      "years_active": 3,
+      "capital_per_yr_musd": null,
+      "tier": "Emerging",
+      "url": "https://semiqon.tech"
+    },
+    {
+      "name": "Alea Quantum Technologies",
+      "domain": "Hardware",
+      "focus": "Trapped-ion",
+      "stage": "Seed",
+      "founded": 2022,
+      "hq": "Aarhus, Denmark",
+      "country": "Denmark",
+      "raised_musd": null,
+      "valuation_musd": null,
+      "years_active": 4,
+      "capital_per_yr_musd": null,
+      "tier": "Emerging",
+      "url": "https://aleaquantum.com"
+    },
+    {
+      "name": "Quantum Xchange",
+      "domain": "Software",
+      "focus": "Quantum-safe networking",
+      "stage": "Private",
+      "founded": 2018,
+      "hq": "Bethesda, USA",
+      "country": "USA",
+      "raised_musd": null,
+      "valuation_musd": null,
+      "years_active": 8,
+      "capital_per_yr_musd": null,
+      "tier": "Emerging",
+      "url": "https://quantumxc.com"
+    },
+    {
+      "name": "Crypta Labs",
+      "domain": "Software",
+      "focus": "Quantum random numbers",
+      "stage": "Seed",
+      "founded": 2014,
+      "hq": "London, UK",
+      "country": "UK",
+      "raised_musd": null,
+      "valuation_musd": null,
+      "years_active": 12,
+      "capital_per_yr_musd": null,
+      "tier": "Emerging",
+      "url": "https://cryptalabs.com"
+    },
+    {
+      "name": "QMware",
+      "domain": "Software",
+      "focus": "Hybrid quantum cloud",
+      "stage": "Seed",
+      "founded": 2019,
+      "hq": "Zug, Switzerland",
+      "country": "Switzerland",
+      "raised_musd": null,
+      "valuation_musd": null,
+      "years_active": 7,
+      "capital_per_yr_musd": null,
+      "tier": "Emerging",
+      "url": "https://qm-ware.com"
+    },
+    {
+      "name": "Qruise",
+      "domain": "Software",
+      "focus": "ML for quantum control",
+      "stage": "Seed",
+      "founded": 2021,
+      "hq": "Saarbruecken, Germany",
+      "country": "Germany",
+      "raised_musd": null,
+      "valuation_musd": null,
+      "years_active": 5,
+      "capital_per_yr_musd": null,
+      "tier": "Emerging",
+      "url": "https://qruise.com"
+    },
+    {
+      "name": "QSimulate",
+      "domain": "Software",
+      "focus": "Molecular simulation",
+      "stage": "Seed",
+      "founded": 2018,
+      "hq": "Cambridge, USA",
+      "country": "USA",
+      "raised_musd": null,
+      "valuation_musd": null,
+      "years_active": 8,
+      "capital_per_yr_musd": null,
+      "tier": "Emerging",
+      "url": "https://qsimulate.com"
+    },
+    {
+      "name": "Pixel Photonics",
+      "domain": "Enabling",
+      "focus": "Integrated photon detectors",
+      "stage": "Seed",
+      "founded": 2020,
+      "hq": "Muenster, Germany",
+      "country": "Germany",
+      "raised_musd": null,
+      "valuation_musd": null,
+      "years_active": 6,
+      "capital_per_yr_musd": null,
+      "tier": "Emerging",
+      "url": "https://pixelphotonics.com"
+    },
+    {
+      "name": "Single Quantum",
+      "domain": "Enabling",
+      "focus": "Superconducting photon detectors",
+      "stage": "Private",
+      "founded": 2012,
+      "hq": "Delft, Netherlands",
+      "country": "Netherlands",
+      "raised_musd": null,
+      "valuation_musd": null,
+      "years_active": 14,
+      "capital_per_yr_musd": null,
+      "tier": "Emerging",
+      "url": "https://singlequantum.com"
+    },
+    {
+      "name": "Miraex",
+      "domain": "Enabling",
+      "focus": "Photonic transducers & sensing",
+      "stage": "Seed",
+      "founded": 2019,
+      "hq": "Lausanne, Switzerland",
+      "country": "Switzerland",
+      "raised_musd": null,
+      "valuation_musd": null,
+      "years_active": 7,
+      "capital_per_yr_musd": null,
+      "tier": "Emerging",
+      "url": "https://miraex.com"
+    },
+    {
+      "name": "Delft Circuits",
+      "domain": "Enabling",
+      "focus": "Cryogenic I/O cabling",
+      "stage": "Seed",
+      "founded": 2016,
+      "hq": "Delft, Netherlands",
+      "country": "Netherlands",
+      "raised_musd": null,
+      "valuation_musd": null,
+      "years_active": 10,
+      "capital_per_yr_musd": null,
+      "tier": "Emerging",
+      "url": "https://delft-circuits.com"
+    },
+    {
+      "name": "Bluefors",
+      "domain": "Enabling",
+      "focus": "Dilution refrigerators",
+      "stage": "Private",
+      "founded": 2008,
+      "hq": "Helsinki, Finland",
+      "country": "Finland",
+      "raised_musd": null,
+      "valuation_musd": null,
+      "years_active": 18,
+      "capital_per_yr_musd": null,
+      "tier": "Emerging",
+      "url": "https://bluefors.com"
+    },
+    {
+      "name": "Zurich Instruments",
+      "domain": "Enabling",
+      "focus": "Control electronics",
+      "stage": "Acquired",
+      "founded": 2008,
+      "hq": "Zurich, Switzerland",
+      "country": "Switzerland",
+      "raised_musd": null,
+      "valuation_musd": null,
+      "years_active": 18,
+      "capital_per_yr_musd": null,
+      "tier": "Emerging",
+      "url": "https://zhinst.com"
+    },
+    {
+      "name": "QuSpin",
+      "domain": "Sensing",
+      "focus": "Optically-pumped magnetometers",
+      "stage": "Private",
+      "founded": 2012,
+      "hq": "Louisville, USA",
+      "country": "USA",
+      "raised_musd": null,
+      "valuation_musd": null,
+      "years_active": 14,
+      "capital_per_yr_musd": null,
+      "tier": "Emerging",
+      "url": "https://quspin.com"
+    },
+    {
+      "name": "Vector Atomic",
+      "domain": "Sensing",
+      "focus": "Atomic clocks & inertial sensors",
+      "stage": "Series A",
+      "founded": 2018,
+      "hq": "Pleasanton, USA",
+      "country": "USA",
+      "raised_musd": null,
+      "valuation_musd": null,
+      "years_active": 8,
+      "capital_per_yr_musd": null,
+      "tier": "Emerging",
+      "url": "https://vectoratomic.com"
+    },
+    {
+      "name": "Q.ANT",
+      "domain": "Sensing",
+      "focus": "Photonic sensing & computing",
+      "stage": "Private",
+      "founded": 2018,
+      "hq": "Stuttgart, Germany",
+      "country": "Germany",
+      "raised_musd": null,
+      "valuation_musd": null,
+      "years_active": 8,
+      "capital_per_yr_musd": null,
+      "tier": "Emerging",
+      "url": "https://qant.com"
+    },
+    {
+      "name": "AOSense",
+      "domain": "Sensing",
+      "focus": "Atom interferometry",
+      "stage": "Private",
+      "founded": 2004,
+      "hq": "Sunnyvale, USA",
+      "country": "USA",
+      "raised_musd": null,
+      "valuation_musd": null,
+      "years_active": 22,
+      "capital_per_yr_musd": null,
+      "tier": "Emerging",
+      "url": "https://aosense.com"
+    }
+  ]
+};
+async function loadData() {
+  applyData(EMBEDDED);
+  return;
+  // eslint-disable-next-line no-unreachable
+  // "data.json" works when hosted next to the page (GitHub Pages);
+  // "../data.json" works under the local dev server, where the page is in /web.
+  const candidates = ["data.json", "../data.json"];
+  let lastErr;
+  for (const path of candidates) {
+    try {
+      const res = await fetch(path + "?_=" + Date.now());
+      if (res.ok) {
+        applyData(await res.json());
+        return;
+      }
+      lastErr = new Error("HTTP " + res.status);
+    } catch (err) {
+      lastErr = err;
+    }
+  }
+  throw new Error("data.json not found — run build_data.py first (" + lastErr + ")");
+}
+
+function wireUp() {
+  document.getElementById("searchInput").addEventListener("input", render);
+  document.getElementById("stageFilter").addEventListener("change", (e) => {
+    stageFilter = e.target.value;
+    render();
+  });
+
+  document.querySelectorAll("#filters button").forEach((btn) => {
+    btn.addEventListener("click", () => {
+      const next =
+        btn.dataset.domain === domainFilter && domainFilter !== "all"
+          ? "all"
+          : btn.dataset.domain;
+      setDomainFilter(next);
+    });
+  });
+
+  document.querySelectorAll("th.sortable").forEach((th) => {
+    th.addEventListener("click", () => {
+      const key = th.dataset.key;
+      if (sortKey === key) {
+        sortDir = sortDir === "asc" ? "desc" : "asc";
+      } else {
+        sortKey = key;
+        // text columns default A→Z; numbers and tier default high-first
+        sortDir = ["name", "domain", "stage", "country"].includes(key) ? "asc" : "desc";
+      }
+      render();
+    });
+  });
+
+}
+
+wireUp();
+loadData().catch((err) => {
+  document.getElementById("tbody").innerHTML =
+    `<tr><td colspan="10" class="empty">${esc(err.message)}</td></tr>`;
+});
+
+</script>
+</body>
+</html>

@@ -47,12 +47,18 @@ python3 server.py
 
 ## View it in the browser (no terminal)
 
-- **GitHub Pages** — the `.github/workflows/pages.yml` workflow rebuilds `data.json` and
-  publishes the dashboard as a static site. Enable it once under repo **Settings → Pages →
-  Source: GitHub Actions**; it goes live at `https://<owner>.github.io/<repo>/`. (Pages usually
-  serves from the default branch, so you may need to merge this branch to `main` first.)
+The repo root ships a **single, self-contained `index.html`** (inline CSS/JS with the data
+embedded — no fetch, no build step), so GitHub Pages can serve it directly:
+
+- **GitHub Pages, deploy from a branch** — repo **Settings → Pages → Build and deployment →
+  Deploy from a branch**, pick this branch and the **`/ (root)`** folder. The dashboard is live
+  at `https://<owner>.github.io/<repo>/`. GitHub prints the exact URL at the top of that page.
+- **GitHub Pages, via Actions** — alternatively set **Source: GitHub Actions**; the
+  `.github/workflows/pages.yml` workflow rebuilds and deploys.
 - **GitHub Codespaces** — **Code ▸ Codespaces ▸ Create codespace**, then `python3 server.py`
   and click the forwarded port.
+
+Regenerate the bundled page after editing data with `python3 build_index.py`.
 
 ## Add or correct a company
 
