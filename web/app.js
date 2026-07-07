@@ -3,10 +3,17 @@
 const TIER_ORDER = { Emerging: 0, Major: 1, Mega: 2 };
 const TIER_CLASS = { Mega: "rag-mega", Major: "rag-major", Emerging: "rag-emerging" };
 
+// Rough maturity order, used to sort the stage dropdown sensibly.
+const STAGE_ORDER = [
+  "Pre-seed", "Seed", "Series A", "Series B", "Series C", "Series D",
+  "Series E", "Growth", "Pre-IPO", "Public", "Acquired", "Private",
+];
+
 let ALL = [];
 let sortKey = "raised_musd";
 let sortDir = "desc"; // 'asc' | 'desc'
 let domainFilter = "all";
+let stageFilter = ""; // "" = all stages
 
 function fmtMoney(musd) {
   if (musd === null || musd === undefined || musd === "") return "—";
@@ -51,6 +58,9 @@ function render() {
   if (domainFilter !== "all") {
     rows = rows.filter((r) => r.domain === domainFilter);
   }
+  if (stageFilter) {
+    rows = rows.filter((r) => r.stage === stageFilter);
+  }
   if (q) {
     rows = rows.filter(
       (r) =>
@@ -84,7 +94,10 @@ function render() {
       .join("");
   }
 
-  const suffix = domainFilter === "all" ? "" : ` · ${domainFilter}`;
+  const parts = [];
+  if (domainFilter !== "all") parts.push(domainFilter);
+  if (stageFilter) parts.push(stageFilter);
+  const suffix = parts.length ? ` · ${parts.join(" · ")}` : "";
   document.getElementById("count").textContent =
     `Showing ${rows.length} of ${ALL.length} companies${suffix}`;
 
@@ -111,7 +124,26 @@ function applyData(data) {
     el.textContent = counts[el.dataset.count] ?? 0;
   });
 
+  populateStages();
   render();
+}
+
+function populateStages() {
+  const present = [...new Set(ALL.map((r) => r.stage))];
+  present.sort((a, b) => {
+    const ai = STAGE_ORDER.indexOf(a);
+    const bi = STAGE_ORDER.indexOf(b);
+    return (ai < 0 ? 99 : ai) - (bi < 0 ? 99 : bi) || a.localeCompare(b);
+  });
+  const sel = document.getElementById("stageFilter");
+  const counts = {};
+  ALL.forEach((r) => (counts[r.stage] = (counts[r.stage] || 0) + 1));
+  sel.innerHTML =
+    `<option value="">All stages</option>` +
+    present
+      .map((s) => `<option value="${esc(s)}">${esc(s)} (${counts[s]})</option>`)
+      .join("");
+  sel.value = stageFilter;
 }
 
 function setDomainFilter(next) {
@@ -144,6 +176,10 @@ async function loadData() {
 
 function wireUp() {
   document.getElementById("searchInput").addEventListener("input", render);
+  document.getElementById("stageFilter").addEventListener("change", (e) => {
+    stageFilter = e.target.value;
+    render();
+  });
 
   document.querySelectorAll("#filters button").forEach((btn) => {
     btn.addEventListener("click", () => {

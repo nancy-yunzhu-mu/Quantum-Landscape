@@ -27,8 +27,8 @@ valuation, and a **funding tier** badge:
 - 🟡 **Major** — $100M–$500M raised
 - 🟢 **Emerging** — under $100M, or undisclosed
 
-The chips above the title filter the table by domain; they combine with the search box and
-column sorting.
+The chips above the title filter by **domain**, the dropdown beside the search box filters by
+**funding stage**, and both combine with free-text search and column sorting.
 
 ## Run it
 

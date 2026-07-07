@@ -94,9 +94,14 @@
 
     <p class="updated">Snapshot compiled (UTC): <strong id="updated">&mdash;</strong></p>
 
-    <div class="search">
-      <span class="search-ic">&#9906;</span>
-      <input id="searchInput" type="text" placeholder="Search by company, focus, or country..." />
+    <div class="controls">
+      <div class="search">
+        <span class="search-ic">&#9906;</span>
+        <input id="searchInput" type="text" placeholder="Search by company, focus, or country..." />
+      </div>
+      <select id="stageFilter" class="stage-select" aria-label="Filter by funding stage">
+        <option value="">All stages</option>
+      </select>
     </div>
 
     <div class="table-wrap">

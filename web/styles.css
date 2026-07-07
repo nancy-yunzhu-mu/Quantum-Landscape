@@ -232,7 +232,34 @@ button.tag:focus-visible { outline: 2px solid #3f3f46; outline-offset: 2px; }
 .updated { color: var(--muted-2); font-size: 14px; margin: 0 0 22px; }
 .updated strong { color: var(--muted); font-weight: 600; }
 
-/* ---- search ---- */
+/* ---- search + controls ---- */
+.controls {
+  display: flex;
+  gap: 12px;
+  margin-bottom: 22px;
+  align-items: stretch;
+}
+.controls .search { flex: 1; margin-bottom: 0; }
+.stage-select {
+  background: var(--panel-2);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  color: var(--text);
+  padding: 0 40px 0 16px;
+  font-size: 14px;
+  font-family: inherit;
+  outline: none;
+  cursor: pointer;
+  min-width: 175px;
+  -webkit-appearance: none;
+  appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%2371717a' stroke-width='2'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 14px center;
+}
+.stage-select:focus { border-color: #3f3f46; }
+.stage-select option { background: var(--panel-2); color: var(--text); }
+
 .search {
   position: relative;
   margin-bottom: 22px;
@@ -359,6 +386,8 @@ td.mono { font-variant-numeric: tabular-nums; }
 .empty { padding: 40px; text-align: center; color: var(--muted-2); }
 
 @media (max-width: 720px) {
+  .controls { flex-direction: column; }
+  .stage-select { min-width: 0; padding: 12px 40px 12px 16px; }
   .stats { grid-template-columns: 1fr; }
   .title { font-size: 32px; }
   .hero { font-size: 23px; }
