@@ -1,22 +1,24 @@
-/* npm Supply-Chain Concentration — client-side rendering, search and sort. */
+/* Quantum Technology Companies — client-side rendering, search, filter and sort. */
 
-const RISK_ORDER = { Low: 0, Medium: 1, High: 2 };
-const RISK_CLASS = { Low: "rag-low", Medium: "rag-med", High: "rag-high" };
+const TIER_ORDER = { Emerging: 0, Major: 1, Mega: 2 };
+const TIER_CLASS = { Mega: "rag-mega", Major: "rag-major", Emerging: "rag-emerging" };
+
+// Rough maturity order, used to sort the stage dropdown sensibly.
+const STAGE_ORDER = [
+  "Pre-seed", "Seed", "Series A", "Series B", "Series C", "Series D",
+  "Series E", "Growth", "Pre-IPO", "Public", "Acquired", "Private",
+];
 
 let ALL = [];
-let sortKey = "deps";
+let sortKey = "raised_musd";
 let sortDir = "desc"; // 'asc' | 'desc'
+let domainFilter = "all";
+let stageFilter = ""; // "" = all stages
 
-function fmtBytes(n) {
-  if (!n && n !== 0) return "—";
-  const units = ["B", "KB", "MB", "GB", "TB"];
-  let i = 0;
-  let v = n;
-  while (v >= 1024 && i < units.length - 1) {
-    v /= 1024;
-    i++;
-  }
-  return `${v.toFixed(v >= 100 || i === 0 ? 0 : v >= 10 ? 1 : 2)} ${units[i]}`;
+function fmtMoney(musd) {
+  if (musd === null || musd === undefined || musd === "") return "—";
+  if (musd >= 1000) return "$" + (musd / 1000).toFixed(musd % 1000 === 0 ? 0 : 1) + "B";
+  return "$" + musd + "M";
 }
 
 function esc(s) {
@@ -35,10 +37,16 @@ function sortRecords(rows) {
   return [...rows].sort((a, b) => {
     let av = a[sortKey];
     let bv = b[sortKey];
-    if (sortKey === "risk") {
-      av = RISK_ORDER[av];
-      bv = RISK_ORDER[bv];
+    if (sortKey === "tier") {
+      av = TIER_ORDER[av];
+      bv = TIER_ORDER[bv];
     }
+    // push blanks to the bottom regardless of direction
+    const an = av === null || av === undefined || av === "";
+    const bn = bv === null || bv === undefined || bv === "";
+    if (an && bn) return 0;
+    if (an) return 1;
+    if (bn) return -1;
     if (typeof av === "string") return av.localeCompare(bv) * dir;
     return (av - bv) * dir;
   });
@@ -47,40 +55,51 @@ function sortRecords(rows) {
 function render() {
   const q = document.getElementById("searchInput").value.trim().toLowerCase();
   let rows = ALL;
+  if (domainFilter !== "all") {
+    rows = rows.filter((r) => r.domain === domainFilter);
+  }
+  if (stageFilter) {
+    rows = rows.filter((r) => r.stage === stageFilter);
+  }
   if (q) {
     rows = rows.filter(
       (r) =>
-        r.package.toLowerCase().includes(q) ||
-        r.heaviest_dep.toLowerCase().includes(q)
+        r.name.toLowerCase().includes(q) ||
+        r.focus.toLowerCase().includes(q) ||
+        r.hq.toLowerCase().includes(q)
     );
   }
   rows = sortRecords(rows);
 
   const tbody = document.getElementById("tbody");
   if (!rows.length) {
-    tbody.innerHTML = `<tr><td colspan="10" class="empty">No packages match "${esc(q)}".</td></tr>`;
+    tbody.innerHTML = `<tr><td colspan="10" class="empty">No companies match your filters.</td></tr>`;
   } else {
     tbody.innerHTML = rows
       .map(
         (r) => `
       <tr>
-        <td class="col-name">${esc(r.package)}</td>
-        <td class="mono">${esc(r.version)}</td>
-        <td class="num mono">${r.deps.toLocaleString()}</td>
-        <td class="num mono">${r.largest_pct.toFixed(1)}%</td>
-        <td class="num mono">${r.top3_pct.toFixed(1)}%</td>
-        <td class="num mono">${r.hhi.toFixed(4)}</td>
-        <td><span class="rag ${RISK_CLASS[r.risk]}">${r.risk}</span></td>
-        <td><span class="dep-name">${esc(r.heaviest_dep)}</span></td>
-        <td class="num mono">${fmtBytes(r.install_bytes)}</td>
-        <td><a class="link" href="${esc(r.npm_url)}" target="_blank" rel="noopener">npm <span class="ext">&#8599;</span></a></td>
+        <td class="col-name">${esc(r.name)}</td>
+        <td><span class="domain-pill domain-${esc(r.domain)}">${esc(r.domain)}</span></td>
+        <td class="col-focus">${esc(r.focus)}</td>
+        <td>${esc(r.stage)}</td>
+        <td class="num mono">${r.founded ?? "—"}</td>
+        <td>${esc(r.country)}</td>
+        <td class="num mono">${fmtMoney(r.raised_musd)}</td>
+        <td class="num mono">${fmtMoney(r.valuation_musd)}</td>
+        <td><span class="rag ${TIER_CLASS[r.tier]}">${r.tier}</span></td>
+        <td><a class="link" href="${esc(r.url)}" target="_blank" rel="noopener">site <span class="ext">&#8599;</span></a></td>
       </tr>`
       )
       .join("");
   }
 
+  const parts = [];
+  if (domainFilter !== "all") parts.push(domainFilter);
+  if (stageFilter) parts.push(stageFilter);
+  const suffix = parts.length ? ` · ${parts.join(" · ")}` : "";
   document.getElementById("count").textContent =
-    `Showing ${rows.length} of ${ALL.length} packages`;
+    `Showing ${rows.length} of ${ALL.length} companies${suffix}`;
 
   document.querySelectorAll("th.sortable").forEach((th) => {
     th.classList.remove("sort-asc", "sort-desc");
@@ -92,22 +111,85 @@ function render() {
 
 function applyData(data) {
   ALL = data.records || [];
-  document.getElementById("statPackages").textContent =
-    data.summary.packages_tracked.toLocaleString();
-  document.getElementById("statHigh").textContent = data.summary.high_risk_count;
-  document.getElementById("statHhi").textContent = data.summary.median_hhi.toFixed(3);
+  document.getElementById("statCompanies").textContent =
+    data.summary.companies_tracked.toLocaleString();
+  document.getElementById("statFunding").textContent =
+    "$" + data.summary.total_raised_busd + "B";
+  document.getElementById("statPublic").textContent = data.summary.publicly_listed;
   document.getElementById("updated").textContent = fmtUpdated(data.generated_at);
+
+  const counts = {};
+  ALL.forEach((r) => (counts[r.domain] = (counts[r.domain] || 0) + 1));
+  document.querySelectorAll(".tag-count").forEach((el) => {
+    el.textContent = counts[el.dataset.count] ?? 0;
+  });
+
+  populateStages();
+  render();
+}
+
+function populateStages() {
+  const present = [...new Set(ALL.map((r) => r.stage))];
+  present.sort((a, b) => {
+    const ai = STAGE_ORDER.indexOf(a);
+    const bi = STAGE_ORDER.indexOf(b);
+    return (ai < 0 ? 99 : ai) - (bi < 0 ? 99 : bi) || a.localeCompare(b);
+  });
+  const sel = document.getElementById("stageFilter");
+  const counts = {};
+  ALL.forEach((r) => (counts[r.stage] = (counts[r.stage] || 0) + 1));
+  sel.innerHTML =
+    `<option value="">All stages</option>` +
+    present
+      .map((s) => `<option value="${esc(s)}">${esc(s)} (${counts[s]})</option>`)
+      .join("");
+  sel.value = stageFilter;
+}
+
+function setDomainFilter(next) {
+  domainFilter = next;
+  document.querySelectorAll("#filters button").forEach((btn) => {
+    btn.classList.toggle("is-active", btn.dataset.domain === domainFilter);
+  });
   render();
 }
 
 async function loadData() {
-  const res = await fetch("../data.json?_=" + Date.now());
-  if (!res.ok) throw new Error("data.json not found — run fetch_data.py first");
-  applyData(await res.json());
+  // "data.json" works when hosted next to the page (GitHub Pages);
+  // "../data.json" works under the local dev server, where the page is in /web.
+  const candidates = ["data.json", "../data.json"];
+  let lastErr;
+  for (const path of candidates) {
+    try {
+      const res = await fetch(path + "?_=" + Date.now());
+      if (res.ok) {
+        applyData(await res.json());
+        return;
+      }
+      lastErr = new Error("HTTP " + res.status);
+    } catch (err) {
+      lastErr = err;
+    }
+  }
+  throw new Error("data.json not found — run build_data.py first (" + lastErr + ")");
 }
 
 function wireUp() {
   document.getElementById("searchInput").addEventListener("input", render);
+  document.getElementById("stageFilter").addEventListener("change", (e) => {
+    stageFilter = e.target.value;
+    render();
+  });
+
+  document.querySelectorAll("#filters button").forEach((btn) => {
+    btn.addEventListener("click", () => {
+      const next =
+        btn.dataset.domain === domainFilter && domainFilter !== "all"
+          ? "all"
+          : btn.dataset.domain;
+      setDomainFilter(next);
+    });
+  });
 
   document.querySelectorAll("th.sortable").forEach((th) => {
     th.addEventListener("click", () => {
@@ -116,8 +198,8 @@ function wireUp() {
         sortDir = sortDir === "asc" ? "desc" : "asc";
       } else {
         sortKey = key;
-        // numbers and risk default to high-first; names default to A-Z
-        sortDir = key === "package" || key === "version" ? "asc" : "desc";
+        // text columns default A→Z; numbers and tier default high-first
+        sortDir = ["name", "domain", "stage", "country"].includes(key) ? "asc" : "desc";
       }
       render();
     });
@@ -129,19 +211,15 @@ function wireUp() {
     const original = btn.textContent;
     btn.textContent = "Refreshing…";
     try {
-      const res = await fetch("/api/refresh", { method: "POST" });
-      if (res.ok) {
-        await loadData();
-      } else {
-        // Static hosting without the refresh endpoint: just reload the snapshot.
-        await loadData();
-      }
-    } catch (e) {
-      try { await loadData(); } catch (_) {}
-    } finally {
-      btn.textContent = original;
-      btn.disabled = false;
+      await fetch("/api/refresh", { method: "POST" });
+    } catch (_) {
+      /* static host without the endpoint — just reload the snapshot */
     }
+    try {
+      await loadData();
+    } catch (_) {}
+    btn.textContent = original;
+    btn.disabled = false;
   });
 }
 

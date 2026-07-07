@@ -1,13 +1,13 @@
 #!/usr/bin/env python3
 """
-Tiny zero-dependency dev server for the npm concentration dashboard.
+Tiny zero-dependency dev server for the Quantum Companies dashboard.
 
     python3 server.py            # serve on http://localhost:8000
     python3 server.py 9000       # pick a port
 
 It serves the static files in ./web and exposes one extra endpoint,
-POST /api/refresh, which re-runs fetch_data.py so the dashboard's
-"Refresh" button pulls fresh numbers from the live npm registry.
+POST /api/refresh, which re-runs build_data.py so the dashboard's
+"Refresh" button rebuilds data.json from companies.csv.
 """
 
 import os
@@ -39,10 +39,10 @@ class Handler(SimpleHTTPRequestHandler):
     def refresh(self):
         try:
             subprocess.run(
-                [sys.executable, os.path.join(HERE, "fetch_data.py")],
+                [sys.executable, os.path.join(HERE, "build_data.py")],
                 cwd=HERE,
                 check=True,
-                timeout=300,
+                timeout=60,
             )
             body = b'{"ok": true}'
             code = 200

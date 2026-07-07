@@ -1,4 +1,695 @@
-{
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Quantum Technology Companies</title>
+<meta name="description" content="Interactive dashboard of quantum technology companies — hardware and software, pre-seed to public." />
+<style>
+:root {
+  --bg: #0a0a0b;
+  --panel: #131315;
+  --panel-2: #17171a;
+  --border: #262629;
+  --border-soft: #1e1e21;
+  --text: #f4f4f5;
+  --muted: #a1a1aa;
+  --muted-2: #71717a;
+  --accent: #e5e5e7;
+  --green: #4ade80;
+  --green-bg: rgba(74, 222, 128, 0.12);
+  --amber: #fbbf24;
+  --amber-bg: rgba(251, 191, 36, 0.12);
+  --red: #f87171;
+  --red-bg: rgba(248, 113, 113, 0.12);
+  --link: #93b4ff;
+  --violet: #a78bfa;
+  --violet-bg: rgba(167, 139, 250, 0.14);
+  --cyan: #38bdf8;
+  --cyan-bg: rgba(56, 189, 248, 0.12);
+  --radius: 12px;
+}
+
+* { box-sizing: border-box; }
+
+html { -webkit-text-size-adjust: 100%; }
+
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--text);
+  font-family: ui-sans-serif, -apple-system, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  font-size: 15px;
+  line-height: 1.55;
+  -webkit-font-smoothing: antialiased;
+}
+
+.wrap {
+  max-width: 1180px;
+  margin: 0 auto;
+  padding: 0 28px;
+}
+
+/* ---- top bar / header ---- */
+.topbar {
+  border-bottom: 1px solid var(--border-soft);
+  padding: 22px 0 30px;
+}
+.topbar-inner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 26px;
+}
+.back {
+  color: var(--muted);
+  text-decoration: none;
+  font-size: 14px;
+}
+.back:hover { color: var(--text); }
+.btn-ghost {
+  background: transparent;
+  color: var(--text);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 8px 16px;
+  font-size: 14px;
+  cursor: pointer;
+  transition: background 0.15s, border-color 0.15s;
+}
+.btn-ghost:hover { background: var(--panel-2); border-color: #3a3a3f; }
+.btn-ghost:disabled { opacity: 0.55; cursor: progress; }
+.title {
+  margin: 0;
+  font-size: 42px;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+}
+.subtitle {
+  margin: 8px 0 0;
+  color: var(--muted-2);
+  font-size: 14.5px;
+}
+
+/* ---- tags ---- */
+.tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin: 40px 0 34px;
+}
+.tag {
+  background: var(--panel-2);
+  border: 1px solid var(--border);
+  color: var(--muted);
+  padding: 5px 13px;
+  border-radius: 999px;
+  font-size: 13px;
+  font-family: inherit;
+  line-height: 1.4;
+}
+button.tag {
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  transition: background 0.15s, border-color 0.15s, color 0.15s;
+}
+button.tag:hover { color: var(--text); border-color: #3a3a3f; }
+button.tag:focus-visible { outline: 2px solid #3f3f46; outline-offset: 2px; }
+
+.tag-all {
+  color: var(--violet);
+  border-color: rgba(167, 139, 250, 0.4);
+  background: var(--violet-bg);
+}
+.tag-all .dot {
+  width: 7px; height: 7px; border-radius: 50%;
+  background: var(--violet);
+  box-shadow: 0 0 0 3px rgba(167, 139, 250, 0.2);
+}
+
+/* filter chips — colored dot per domain */
+.fdot { width: 7px; height: 7px; border-radius: 50%; display: inline-block; }
+.fdot.d-hw { background: var(--cyan); }
+.fdot.d-sw { background: var(--violet); }
+.fdot.d-en { background: var(--amber); }
+.fdot.d-se { background: var(--green); }
+.tag-count { color: var(--muted-2); font-variant-numeric: tabular-nums; }
+
+.tag-filter.is-active {
+  color: var(--text);
+  border-color: #52525b;
+  background: #232327;
+}
+.tag-filter.is-active .tag-count { color: var(--muted); }
+.tag-all.is-active { box-shadow: 0 0 0 1px rgba(167, 139, 250, 0.25) inset; }
+.tag-all:not(.is-active) {
+  color: var(--muted);
+  background: var(--panel-2);
+  border-color: var(--border);
+}
+.tag-all:not(.is-active) .dot { background: var(--muted-2); box-shadow: none; }
+
+/* ---- hero ---- */
+.hero {
+  margin: 0 0 30px;
+  padding: 4px 0 4px 24px;
+  border-left: 3px solid #3f3f46;
+  font-size: 30px;
+  font-weight: 700;
+  line-height: 1.28;
+  letter-spacing: -0.02em;
+}
+.lede { max-width: 900px; }
+.lede p { color: var(--muted); margin: 0 0 18px; }
+.lede em { color: var(--text); font-style: normal; font-weight: 600; }
+.prompt { color: var(--muted); margin: 26px 0 24px; }
+.prompt code {
+  background: var(--panel-2);
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  padding: 2px 6px;
+  font-size: 13px;
+}
+
+/* ---- notes ---- */
+.notes {
+  background: var(--panel);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  margin: 0 0 44px;
+}
+.notes summary {
+  list-style: none;
+  cursor: pointer;
+  padding: 18px 22px;
+  font-weight: 600;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.notes summary::-webkit-details-marker { display: none; }
+.notes summary::after {
+  content: "\25BE";
+  color: var(--muted);
+  transition: transform 0.2s;
+}
+.notes[open] summary::after { transform: rotate(180deg); }
+.notes-body {
+  padding: 0 22px 22px;
+  color: var(--muted);
+  border-top: 1px solid var(--border-soft);
+  padding-top: 18px;
+}
+.notes-body ul { margin: 12px 0; padding-left: 20px; }
+.notes-body li { margin: 6px 0; }
+.notes-body strong { color: var(--text); }
+
+/* ---- stat cards ---- */
+.stats {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 18px;
+  margin-bottom: 30px;
+}
+.stat-card {
+  background: var(--panel);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 22px 24px;
+}
+.stat-label {
+  color: var(--muted-2);
+  font-size: 12px;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.stat-ic { color: var(--muted-2); }
+.stat-value {
+  font-size: 34px;
+  font-weight: 700;
+  margin: 12px 0 6px;
+  letter-spacing: -0.01em;
+}
+.stat-sub { color: var(--muted-2); font-size: 13px; }
+
+.updated { color: var(--muted-2); font-size: 14px; margin: 0 0 22px; }
+.updated strong { color: var(--muted); font-weight: 600; }
+
+/* ---- search + controls ---- */
+.controls {
+  display: flex;
+  gap: 12px;
+  margin-bottom: 22px;
+  align-items: stretch;
+}
+.controls .search { flex: 1; margin-bottom: 0; }
+.stage-select {
+  background: var(--panel-2);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  color: var(--text);
+  padding: 0 40px 0 16px;
+  font-size: 14px;
+  font-family: inherit;
+  outline: none;
+  cursor: pointer;
+  min-width: 175px;
+  -webkit-appearance: none;
+  appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%2371717a' stroke-width='2'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 14px center;
+}
+.stage-select:focus { border-color: #3f3f46; }
+.stage-select option { background: var(--panel-2); color: var(--text); }
+
+.search {
+  position: relative;
+  margin-bottom: 22px;
+}
+.search-ic {
+  position: absolute;
+  left: 16px; top: 50%;
+  transform: translateY(-50%);
+  color: var(--muted-2);
+}
+.search input {
+  width: 100%;
+  background: var(--panel-2);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  color: var(--text);
+  padding: 14px 16px 14px 42px;
+  font-size: 15px;
+  outline: none;
+}
+.search input::placeholder { color: var(--muted-2); }
+.search input:focus { border-color: #3f3f46; }
+
+/* ---- table ---- */
+.table-wrap {
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  overflow-x: auto;
+}
+table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 14px;
+  min-width: 900px;
+}
+thead th {
+  text-align: left;
+  color: var(--muted-2);
+  font-weight: 500;
+  font-size: 13px;
+  padding: 16px 16px;
+  border-bottom: 1px solid var(--border);
+  white-space: nowrap;
+  user-select: none;
+}
+th.num, td.num { text-align: right; }
+th.sortable { cursor: pointer; }
+th.sortable:hover { color: var(--text); }
+th .arrow { display: inline-block; width: 10px; color: var(--muted); }
+th.sort-asc .arrow::after { content: "\25B4"; }
+th.sort-desc .arrow::after { content: "\25BE"; }
+th.sortable:not(.sort-asc):not(.sort-desc) .arrow::after { content: "\21C5"; opacity: 0.4; }
+
+tbody td {
+  padding: 18px 16px;
+  border-bottom: 1px solid var(--border-soft);
+  color: var(--muted);
+  vertical-align: middle;
+}
+tbody tr:last-child td { border-bottom: none; }
+tbody tr:hover { background: rgba(255, 255, 255, 0.015); }
+td.col-name { color: var(--text); font-weight: 600; }
+td.mono { font-variant-numeric: tabular-nums; }
+.dep-name { color: var(--text); }
+.link {
+  color: var(--link);
+  text-decoration: none;
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+}
+.link:hover { text-decoration: underline; }
+.link .ext { font-size: 11px; opacity: 0.8; }
+
+/* ---- RAG badges ---- */
+.rag {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  padding: 4px 11px;
+  border-radius: 999px;
+  font-size: 12.5px;
+  font-weight: 500;
+  white-space: nowrap;
+}
+.rag::before {
+  content: "";
+  width: 6px; height: 6px; border-radius: 50%;
+  background: currentColor;
+}
+.rag-mega { color: var(--violet); background: var(--violet-bg); }
+.rag-major { color: var(--amber); background: var(--amber-bg); }
+.rag-emerging { color: var(--green); background: var(--green-bg); }
+
+/* domain pill in the table */
+.domain-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  font-size: 13px;
+  color: var(--muted);
+}
+.domain-pill::before {
+  content: "";
+  width: 7px; height: 7px; border-radius: 50%;
+  background: var(--muted-2);
+}
+.domain-Hardware::before { background: var(--cyan); }
+.domain-Software::before { background: var(--violet); }
+.domain-Enabling::before { background: var(--amber); }
+.domain-Sensing::before { background: var(--green); }
+
+.count { color: var(--muted-2); font-size: 13.5px; margin: 20px 0 60px; }
+
+/* ---- footer ---- */
+.footer {
+  border-top: 1px solid var(--border-soft);
+  padding: 30px 0;
+  text-align: center;
+  color: var(--muted-2);
+  font-size: 13.5px;
+}
+
+.empty { padding: 40px; text-align: center; color: var(--muted-2); }
+
+@media (max-width: 720px) {
+  .controls { flex-direction: column; }
+  .stage-select { min-width: 0; padding: 12px 40px 12px 16px; }
+  .stats { grid-template-columns: 1fr; }
+  .title { font-size: 32px; }
+  .hero { font-size: 23px; }
+  .wrap { padding: 0 18px; }
+}
+
+</style>
+</head>
+<body>
+
+  <header class="topbar">
+    <div class="wrap topbar-inner">
+      
+      
+    </div>
+    <div class="wrap">
+      <h1 class="title">Quantum Technology Companies</h1>
+      <p class="subtitle">Quantum hardware &amp; software &middot; pre-seed to public &middot; compiled from public reporting</p>
+    </div>
+  </header>
+
+  <main class="wrap">
+    <div class="tags" id="filters">
+      <span class="tag tag-static">2026</span>
+      <button type="button" class="tag tag-all is-active" data-domain="all"><span class="dot"></span> All</button>
+      <button type="button" class="tag tag-filter" data-domain="Hardware"><span class="fdot d-hw"></span> Hardware <span class="tag-count" data-count="Hardware"></span></button>
+      <button type="button" class="tag tag-filter" data-domain="Software"><span class="fdot d-sw"></span> Software <span class="tag-count" data-count="Software"></span></button>
+      <button type="button" class="tag tag-filter" data-domain="Enabling"><span class="fdot d-en"></span> Enabling <span class="tag-count" data-count="Enabling"></span></button>
+      <button type="button" class="tag tag-filter" data-domain="Sensing"><span class="fdot d-se"></span> Sensing <span class="tag-count" data-count="Sensing"></span></button>
+    </div>
+
+    <blockquote class="hero">
+      Map the quantum industry's real capital &mdash; every layer, every stage, ranked and comparable.
+    </blockquote>
+
+    <div class="lede">
+      <p>
+        A research dashboard covering the quantum technology sector end to end &mdash; from
+        <em>superconducting, trapped-ion, neutral-atom, photonic and silicon-spin hardware</em>
+        to the algorithms, error-correction, control electronics and post-quantum security built
+        around it. Every company from pre-seed to publicly listed.
+      </p>
+      <p>
+        Sort and filter by domain, funding stage, capital raised, valuation, and a funding tier
+        that flags where the biggest bets sit &mdash; useful for tracking momentum, comparing
+        modalities, sizing the field, and mapping who is building what, where.
+      </p>
+    </div>
+
+    <p class="prompt">Want a company added or a figure corrected? Edit <code>companies.csv</code> and hit Refresh.</p>
+
+    <details class="notes">
+      <summary>Notes &amp; methodology</summary>
+      <div class="notes-body">
+        <p>
+          Each company is placed in one of four <strong>domains</strong> &mdash;
+          <strong>Hardware</strong> (qubit systems), <strong>Software</strong> (algorithms,
+          error correction, post-quantum security), <strong>Enabling</strong> (control
+          electronics, cryogenics, networking, foundries), and <strong>Sensing</strong>
+          (quantum metrology). Use the chips above the title to filter by domain.
+        </p>
+        <p>The <strong>funding tier</strong> badge buckets total capital raised:</p>
+        <ul>
+          <li><span class="rag rag-mega">Mega</span> &mdash; $500M or more raised.</li>
+          <li><span class="rag rag-major">Major</span> &mdash; $100M&ndash;$500M raised.</li>
+          <li><span class="rag rag-emerging">Emerging</span> &mdash; under $100M, or undisclosed.</li>
+        </ul>
+        <p class="caveat">
+          Figures are <strong>approximate</strong> and compiled from public reporting (company
+          announcements, The Quantum Insider, Crunchbase, SEC filings) as of mid-2026. Private
+          valuations and undisclosed rounds are estimates; public-company figures reflect recent
+          market capitalization, which moves daily. Treat this as a map of the field, not a
+          valuation source.
+        </p>
+      </div>
+    </details>
+
+    <section class="stats">
+      <div class="stat-card">
+        <div class="stat-label"><span class="stat-ic">&#9636;</span> COMPANIES TRACKED</div>
+        <div class="stat-value" id="statCompanies">&mdash;</div>
+        <div class="stat-sub">hardware, software &amp; enabling tech</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-label">TOTAL DISCLOSED FUNDING</div>
+        <div class="stat-value" id="statFunding">&mdash;</div>
+        <div class="stat-sub">sum of reported capital raised</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-label">PUBLICLY LISTED</div>
+        <div class="stat-value" id="statPublic">&mdash;</div>
+        <div class="stat-sub">trading on public markets</div>
+      </div>
+    </section>
+
+    <p class="updated">Snapshot compiled (UTC): <strong id="updated">&mdash;</strong></p>
+
+    <div class="controls">
+      <div class="search">
+        <span class="search-ic">&#9906;</span>
+        <input id="searchInput" type="text" placeholder="Search by company, focus, or country..." />
+      </div>
+      <select id="stageFilter" class="stage-select" aria-label="Filter by funding stage">
+        <option value="">All stages</option>
+      </select>
+    </div>
+
+    <div class="table-wrap">
+      <table id="table">
+        <thead>
+          <tr>
+            <th data-key="name" class="sortable col-name">Company <span class="arrow"></span></th>
+            <th data-key="domain" class="sortable">Domain <span class="arrow"></span></th>
+            <th class="col-focus">Focus</th>
+            <th data-key="stage" class="sortable">Stage <span class="arrow"></span></th>
+            <th data-key="founded" class="sortable num">Founded <span class="arrow"></span></th>
+            <th data-key="country" class="sortable">HQ <span class="arrow"></span></th>
+            <th data-key="raised_musd" class="sortable num">Raised <span class="arrow"></span></th>
+            <th data-key="valuation_musd" class="sortable num">Valuation <span class="arrow"></span></th>
+            <th data-key="tier" class="sortable">Tier <span class="arrow"></span></th>
+            <th>LINK</th>
+          </tr>
+        </thead>
+        <tbody id="tbody"></tbody>
+      </table>
+    </div>
+
+    <p class="count" id="count">&nbsp;</p>
+  </main>
+
+  <footer class="footer">
+    <div class="wrap">&copy; 2026 Quantum Companies Explorer &middot; figures compiled from public sources, approximate</div>
+  </footer>
+
+  
+
+<script>
+/* Quantum Technology Companies — client-side rendering, search, filter and sort. */
+
+const TIER_ORDER = { Emerging: 0, Major: 1, Mega: 2 };
+const TIER_CLASS = { Mega: "rag-mega", Major: "rag-major", Emerging: "rag-emerging" };
+
+// Rough maturity order, used to sort the stage dropdown sensibly.
+const STAGE_ORDER = [
+  "Pre-seed", "Seed", "Series A", "Series B", "Series C", "Series D",
+  "Series E", "Growth", "Pre-IPO", "Public", "Acquired", "Private",
+];
+
+let ALL = [];
+let sortKey = "raised_musd";
+let sortDir = "desc"; // 'asc' | 'desc'
+let domainFilter = "all";
+let stageFilter = ""; // "" = all stages
+
+function fmtMoney(musd) {
+  if (musd === null || musd === undefined || musd === "") return "—";
+  if (musd >= 1000) return "$" + (musd / 1000).toFixed(musd % 1000 === 0 ? 0 : 1) + "B";
+  return "$" + musd + "M";
+}
+
+function esc(s) {
+  return String(s).replace(/[&<>"']/g, (c) =>
+    ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c])
+  );
+}
+
+function fmtUpdated(iso) {
+  if (!iso) return "—";
+  return String(iso).replace("T", " ").replace(/\.\d+.*$/, "").replace("+00:00", "") + " UTC";
+}
+
+function sortRecords(rows) {
+  const dir = sortDir === "asc" ? 1 : -1;
+  return [...rows].sort((a, b) => {
+    let av = a[sortKey];
+    let bv = b[sortKey];
+    if (sortKey === "tier") {
+      av = TIER_ORDER[av];
+      bv = TIER_ORDER[bv];
+    }
+    // push blanks to the bottom regardless of direction
+    const an = av === null || av === undefined || av === "";
+    const bn = bv === null || bv === undefined || bv === "";
+    if (an && bn) return 0;
+    if (an) return 1;
+    if (bn) return -1;
+    if (typeof av === "string") return av.localeCompare(bv) * dir;
+    return (av - bv) * dir;
+  });
+}
+
+function render() {
+  const q = document.getElementById("searchInput").value.trim().toLowerCase();
+  let rows = ALL;
+  if (domainFilter !== "all") {
+    rows = rows.filter((r) => r.domain === domainFilter);
+  }
+  if (stageFilter) {
+    rows = rows.filter((r) => r.stage === stageFilter);
+  }
+  if (q) {
+    rows = rows.filter(
+      (r) =>
+        r.name.toLowerCase().includes(q) ||
+        r.focus.toLowerCase().includes(q) ||
+        r.hq.toLowerCase().includes(q)
+    );
+  }
+  rows = sortRecords(rows);
+
+  const tbody = document.getElementById("tbody");
+  if (!rows.length) {
+    tbody.innerHTML = `<tr><td colspan="10" class="empty">No companies match your filters.</td></tr>`;
+  } else {
+    tbody.innerHTML = rows
+      .map(
+        (r) => `
+      <tr>
+        <td class="col-name">${esc(r.name)}</td>
+        <td><span class="domain-pill domain-${esc(r.domain)}">${esc(r.domain)}</span></td>
+        <td class="col-focus">${esc(r.focus)}</td>
+        <td>${esc(r.stage)}</td>
+        <td class="num mono">${r.founded ?? "—"}</td>
+        <td>${esc(r.country)}</td>
+        <td class="num mono">${fmtMoney(r.raised_musd)}</td>
+        <td class="num mono">${fmtMoney(r.valuation_musd)}</td>
+        <td><span class="rag ${TIER_CLASS[r.tier]}">${r.tier}</span></td>
+        <td><a class="link" href="${esc(r.url)}" target="_blank" rel="noopener">site <span class="ext">&#8599;</span></a></td>
+      </tr>`
+      )
+      .join("");
+  }
+
+  const parts = [];
+  if (domainFilter !== "all") parts.push(domainFilter);
+  if (stageFilter) parts.push(stageFilter);
+  const suffix = parts.length ? ` · ${parts.join(" · ")}` : "";
+  document.getElementById("count").textContent =
+    `Showing ${rows.length} of ${ALL.length} companies${suffix}`;
+
+  document.querySelectorAll("th.sortable").forEach((th) => {
+    th.classList.remove("sort-asc", "sort-desc");
+    if (th.dataset.key === sortKey) {
+      th.classList.add(sortDir === "asc" ? "sort-asc" : "sort-desc");
+    }
+  });
+}
+
+function applyData(data) {
+  ALL = data.records || [];
+  document.getElementById("statCompanies").textContent =
+    data.summary.companies_tracked.toLocaleString();
+  document.getElementById("statFunding").textContent =
+    "$" + data.summary.total_raised_busd + "B";
+  document.getElementById("statPublic").textContent = data.summary.publicly_listed;
+  document.getElementById("updated").textContent = fmtUpdated(data.generated_at);
+
+  const counts = {};
+  ALL.forEach((r) => (counts[r.domain] = (counts[r.domain] || 0) + 1));
+  document.querySelectorAll(".tag-count").forEach((el) => {
+    el.textContent = counts[el.dataset.count] ?? 0;
+  });
+
+  populateStages();
+  render();
+}
+
+function populateStages() {
+  const present = [...new Set(ALL.map((r) => r.stage))];
+  present.sort((a, b) => {
+    const ai = STAGE_ORDER.indexOf(a);
+    const bi = STAGE_ORDER.indexOf(b);
+    return (ai < 0 ? 99 : ai) - (bi < 0 ? 99 : bi) || a.localeCompare(b);
+  });
+  const sel = document.getElementById("stageFilter");
+  const counts = {};
+  ALL.forEach((r) => (counts[r.stage] = (counts[r.stage] || 0) + 1));
+  sel.innerHTML =
+    `<option value="">All stages</option>` +
+    present
+      .map((s) => `<option value="${esc(s)}">${esc(s)} (${counts[s]})</option>`)
+      .join("");
+  sel.value = stageFilter;
+}
+
+function setDomainFilter(next) {
+  domainFilter = next;
+  document.querySelectorAll("#filters button").forEach((btn) => {
+    btn.classList.toggle("is-active", btn.dataset.domain === domainFilter);
+  });
+  render();
+}
+
+const EMBEDDED = {
   "generated_at": "2026-07-07T08:15:00.970916+00:00",
   "snapshot_year": 2026,
   "source": "Compiled from public reporting (company announcements, The Quantum Insider, Crunchbase, SEC filings)",
@@ -1591,4 +2282,69 @@
       "url": "https://aosense.com"
     }
   ]
+};
+async function loadData() {
+  applyData(EMBEDDED);
+  return;
+  // eslint-disable-next-line no-unreachable
+  // "data.json" works when hosted next to the page (GitHub Pages);
+  // "../data.json" works under the local dev server, where the page is in /web.
+  const candidates = ["data.json", "../data.json"];
+  let lastErr;
+  for (const path of candidates) {
+    try {
+      const res = await fetch(path + "?_=" + Date.now());
+      if (res.ok) {
+        applyData(await res.json());
+        return;
+      }
+      lastErr = new Error("HTTP " + res.status);
+    } catch (err) {
+      lastErr = err;
+    }
+  }
+  throw new Error("data.json not found — run build_data.py first (" + lastErr + ")");
 }
+
+function wireUp() {
+  document.getElementById("searchInput").addEventListener("input", render);
+  document.getElementById("stageFilter").addEventListener("change", (e) => {
+    stageFilter = e.target.value;
+    render();
+  });
+
+  document.querySelectorAll("#filters button").forEach((btn) => {
+    btn.addEventListener("click", () => {
+      const next =
+        btn.dataset.domain === domainFilter && domainFilter !== "all"
+          ? "all"
+          : btn.dataset.domain;
+      setDomainFilter(next);
+    });
+  });
+
+  document.querySelectorAll("th.sortable").forEach((th) => {
+    th.addEventListener("click", () => {
+      const key = th.dataset.key;
+      if (sortKey === key) {
+        sortDir = sortDir === "asc" ? "desc" : "asc";
+      } else {
+        sortKey = key;
+        // text columns default A→Z; numbers and tier default high-first
+        sortDir = ["name", "domain", "stage", "country"].includes(key) ? "asc" : "desc";
+      }
+      render();
+    });
+  });
+
+}
+
+wireUp();
+loadData().catch((err) => {
+  document.getElementById("tbody").innerHTML =
+    `<tr><td colspan="10" class="empty">${esc(err.message)}</td></tr>`;
+});
+
+</script>
+</body>
+</html>
