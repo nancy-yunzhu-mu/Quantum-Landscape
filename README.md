@@ -1,108 +1,86 @@
-# npm Supply-Chain Concentration
+# Quantum Technology Companies
 
-> Turn a package's dependency tree into its real install footprint — ranked and comparable.
+> Map the quantum industry's real capital — every layer, every stage, ranked and comparable.
 
-A live dashboard that pulls the latest release of each npm package from the public
-[npm registry](https://registry.npmjs.org) and converts its raw dependency list into a
-fast, searchable, comparable view of each package's **diversification** and heaviest
-exposures.
-
-It is a portfolio-concentration analysis, applied to software supply chains instead of
-funds. Each package's direct runtime dependencies are treated as a portfolio; every
-dependency is weighted by its own install footprint; and the dashboard ranks packages by
-the same concentration statistics an equity analyst runs on a fund's holdings.
+A research dashboard covering the quantum technology sector end to end — from
+**superconducting, trapped-ion, neutral-atom, photonic and silicon-spin hardware** to the
+algorithms, error-correction, control electronics, and post-quantum security built around
+it. Every company from pre-seed to publicly listed, searchable, filterable, and sortable.
 
 ![dashboard preview](docs/preview.png)
 
-## The metrics
+## What's tracked
 
-For a package `P`, let its direct runtime dependencies be weighted by their **unpacked
-install size** (bytes of each dependency's latest release, `w_i`), with shares
-`s_i = w_i / Σ w`:
+Each company is placed in one of four **domains**:
 
-| Column         | Meaning                                                             |
-| -------------- | ------------------------------------------------------------------- |
-| **Deps**       | number of direct runtime dependencies with a measurable size        |
-| **Largest %**  | `max(s_i)` — the single heaviest dependency's share of the footprint |
-| **Top 3 %**    | combined share of the three heaviest dependencies                   |
-| **HHI**        | `Σ s_i²` — Herfindahl-Hirschman Index (0–1); higher = more concentrated |
-| **Risk**       | RAG tag from the HHI                                                 |
-| **Heaviest Dep** | the dependency that dominates the install footprint               |
-| **Install Size** | total unpacked size of all direct dependencies                    |
+| Domain       | What it covers                                                        |
+| ------------ | --------------------------------------------------------------------- |
+| **Hardware** | qubit systems (superconducting, trapped-ion, neutral-atom, photonic, silicon-spin, …) |
+| **Software** | algorithms, error correction, quantum-safe / post-quantum cryptography |
+| **Enabling** | control electronics, cryogenics, networking, QPU foundries            |
+| **Sensing**  | quantum metrology and magnetometry                                    |
 
-The **risk tag** buckets the HHI with the U.S. DOJ / FTC merger-guideline thresholds
-(1500 / 2500 points, i.e. `0.15` and `0.25` on the normalized 0–1 scale):
+Columns: company, domain, focus/modality, funding stage, year founded, HQ, capital raised,
+valuation, and a **funding tier** badge:
 
-- 🟢 **Low** — HHI < 0.15 (footprint spread across many dependencies)
-- 🟡 **Medium** — 0.15 ≤ HHI < 0.25
-- 🔴 **High** — HHI ≥ 0.25 (one or two dependencies dominate the install)
+- 🟣 **Mega** — $500M or more raised
+- 🟡 **Major** — $100M–$500M raised
+- 🟢 **Emerging** — under $100M, or undisclosed
 
-A high score is the software analogue of single-name concentration risk: most of what you
-install — and most of your supply-chain surface — rides on one package.
-
-The **filter chips** under the title (Live / Low / Medium / High) filter the table by risk
-level — each shows its live count, "Live" resets to all — and they combine with the search
-box and column sorting.
+The chips above the title filter the table by domain; they combine with the search box and
+column sorting.
 
 ## Run it
 
 No dependencies beyond Python 3.8+ (standard library only).
 
 ```bash
-# 1. Pull live data from the npm registry and build data.json
-python3 fetch_data.py
+# 1. Build data.json from the curated source (companies.csv)
+python3 build_data.py
 
 # 2. Serve the dashboard (the Refresh button re-runs step 1)
 python3 server.py
 # → open http://localhost:8000
 ```
 
-`data.json` is committed so the dashboard renders immediately; re-run `fetch_data.py`
-(or click **Refresh**) to pull the latest numbers.
+`data.json` is committed, so the dashboard renders immediately.
 
 ## View it in the browser (no terminal)
 
-Two ways to see the dashboard without running anything locally:
+- **GitHub Pages** — the `.github/workflows/pages.yml` workflow rebuilds `data.json` and
+  publishes the dashboard as a static site. Enable it once under repo **Settings → Pages →
+  Source: GitHub Actions**; it goes live at `https://<owner>.github.io/<repo>/`. (Pages usually
+  serves from the default branch, so you may need to merge this branch to `main` first.)
+- **GitHub Codespaces** — **Code ▸ Codespaces ▸ Create codespace**, then `python3 server.py`
+  and click the forwarded port.
 
-**GitHub Pages — a hosted URL.** A workflow (`.github/workflows/pages.yml`) publishes
-the dashboard as a static site. To turn it on once: repo **Settings → Pages → Build and
-deployment → Source: GitHub Actions**. After the next push it goes live at
-`https://<owner>.github.io/<repo>/`. Pages usually deploys from the default branch, so you
-may need to merge this branch to `main` first. On Pages the table, search and sorting all
-work; the **Refresh** button just reloads the committed snapshot (there's no Python server
-to re-fetch), and the daily refresh workflow keeps that snapshot current.
+## Add or correct a company
 
-**GitHub Codespaces — run it in the browser, works on this branch now.** On the repo page:
-**Code ▸ Codespaces ▸ Create codespace on this branch**, then in the Codespace terminal run
-`python3 server.py` and click the forwarded port. This runs the real server, so the
-**Refresh** button re-fetches live.
+Edit [`companies.csv`](companies.csv) — a pipe-delimited (`|`) file, one company per line:
 
-## Configure which packages are tracked
+```
+name|domain|focus|stage|founded|hq|total_raised_musd|valuation_musd|url
+```
 
-Edit [`packages.txt`](packages.txt) — one npm package name per line. Any package with
-fewer than three sized runtime dependencies is skipped automatically (you can't talk about
-concentration across two holdings).
+Leave a numeric field blank if undisclosed. Then run `python3 build_data.py` (or click
+**Refresh** in the running app). `build_data.py` derives the funding tier, a funding-velocity
+figure, and the summary aggregates.
+
+## Data & caveats
+
+Figures are **approximate**, compiled from public reporting — company announcements,
+[The Quantum Insider](https://thequantuminsider.com), Crunchbase, and SEC / press filings — as
+of mid-2026. Private valuations and undisclosed rounds are estimates; public-company figures
+reflect recent market capitalization, which moves daily. This is a **map of the field, not a
+valuation source**. Corrections welcome via `companies.csv`.
 
 ## How it works
 
 ```
-packages.txt ──▶ fetch_data.py ──▶ data.json ──▶ web/ (index.html + app.js)
-                     │
-                     └─ GET registry.npmjs.org/<pkg>/latest      (the "fund")
-                        GET registry.npmjs.org/<dep>/latest ...  (its "holdings", by size)
+companies.csv ──▶ build_data.py ──▶ data.json ──▶ web/ (index.html + app.js)
 ```
 
-- `fetch_data.py` — fetches manifests concurrently, caches shared dependencies, computes
-  the concentration statistics, and writes `data.json`.
-- `web/` — a static dark-themed dashboard: client-side search, sortable columns, RAG badges.
-- `server.py` — a stdlib static server plus a `POST /api/refresh` endpoint for the button.
-
-## Notes & caveats
-
-- Weighting uses each dependency's own latest unpacked size (a shallow, direct-dependency
-  view), not a fully resolved transitive tree — it's a fast, comparable proxy, not an
-  exact `node_modules` measurement.
-- `unpackedSize` is populated by npm for modern releases; the rare dependency without one
-  is dropped from that package's weights.
-- The registry is a public, unauthenticated, read-only API. Be a good citizen about how
-  often you refresh.
+- `companies.csv` — curated, human-editable source of truth.
+- `build_data.py` — derives tiers / velocity / aggregates and writes `data.json` (no network I/O).
+- `web/` — static dark-themed dashboard: domain filters, search, sortable columns, tier badges.
+- `server.py` — stdlib static server plus a `POST /api/refresh` endpoint for the button.
